@@ -189,7 +189,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-forest/10">
-                {sortedData.map((entry, index) => (
+                {sortedData.map((entry) => (
                   <tr
                     key={entry.wallet}
                     className="hover:bg-white/50 transition-colors duration-150"
@@ -269,7 +269,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
 
           {/* Mobile Cards */}
           <div className="md:hidden">
-            {sortedData.map((entry, index) => (
+            {sortedData.map((entry) => (
               <div
                 key={entry.wallet}
                 className="p-4 border-b border-forest/10 hover:bg-white/50 transition-colors duration-150"
@@ -335,7 +335,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           </div>
         </div>
         {/* Stats */}
-        {/* <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg">
             <div className="text-xl md:text-2xl font-futura-bold text-forest">
               {sortedData.length}
@@ -361,7 +361,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             </div>
             <div className="text-xs md:text-sm text-forest/60">Total Taps</div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
