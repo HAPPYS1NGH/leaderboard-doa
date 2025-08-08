@@ -6,6 +6,7 @@ interface LeaderboardEntry {
   totalUsdcSent: string;
   transactionCount: number;
   transactionHashes: string[];
+  originalRank: number;
 }
 
 interface LeaderboardProps {
@@ -14,18 +15,33 @@ interface LeaderboardProps {
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   const [sortBy, setSortBy] = useState<"amount" | "transactions">("amount");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const sortedData = useMemo(() => {
-    const entries: LeaderboardEntry[] = Object.entries(leaderboardData).map(
-      ([wallet, data]) => ({
+    // First, create entries with original ranking
+    const allEntries: LeaderboardEntry[] = Object.entries(leaderboardData)
+      .map(([wallet, data]) => ({
         wallet,
         totalUsdcSent: data.totalUsdcSent,
         transactionCount: data.transactionCount,
         transactionHashes: data.transactionHashes,
-      })
-    );
+        originalRank: 0, // Will be set below
+      }))
+      .sort((a, b) => parseFloat(b.totalUsdcSent) - parseFloat(a.totalUsdcSent))
+      .map((entry, index) => ({
+        ...entry,
+        originalRank: index + 1,
+      }));
 
-    return entries
+    // Filter by search query
+    const filteredEntries = searchQuery
+      ? allEntries.filter((entry) =>
+          entry.wallet.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : allEntries;
+
+    // Sort filtered entries by the current sort criteria
+    return filteredEntries
       .sort((a, b) => {
         if (sortBy === "amount") {
           return parseFloat(b.totalUsdcSent) - parseFloat(a.totalUsdcSent);
@@ -34,7 +50,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
         }
       })
       .slice(0, maxEntries);
-  }, [sortBy, maxEntries]);
+  }, [sortBy, maxEntries, searchQuery]);
 
   const formatWallet = (wallet: string) => {
     return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
@@ -67,7 +83,62 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             Who's been sipping the yield the fastest? Find out here.
           </p>
         </div>
-
+        {/* Search Box */}
+        <div className="flex justify-center mb-8">
+          <div className="relative w-full max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-5 w-5 text-forest/40"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search by wallet address..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-3 border border-forest/20 rounded-lg bg-white/70 backdrop-blur-sm text-forest placeholder-forest/40 focus:outline-none focus:ring-2 focus:ring-forest/50 focus:border-forest/50 font-futura-bold"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <svg
+                  className="h-5 w-5 text-forest/40 hover:text-forest/60"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+        {/* Search Results Info */}
+        {searchQuery && (
+          <div className="text-center mb-6">
+            <p className="text-forest/70 font-futura-bold">
+              Found {sortedData.length} farmer
+              {sortedData.length !== 1 ? "s" : ""} matching "{searchQuery}"
+            </p>
+          </div>
+        )}
         {/* Sort Controls */}
         <div className="flex justify-center mb-8">
           <div className="bg-white/70 backdrop-blur-sm rounded-lg shadow-sm p-1">
@@ -93,7 +164,6 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             </button>
           </div>
         </div>
-
         {/* Leaderboard Table */}
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
           {/* Desktop Table */}
@@ -108,7 +178,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                     Farmer
                   </th>
                   <th className="px-6 py-4 text-right text-sm font-futura-bold">
-                    Total USDC
+                    Yield
                   </th>
                   <th className="px-6 py-4 text-right text-sm font-futura-bold">
                     Taps
@@ -128,16 +198,16 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                       <div className="flex items-center">
                         <span
                           className={`inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-futura-bold ${
-                            index === 0
+                            entry.originalRank === 1
                               ? "bg-yellow-100 text-yellow-800"
-                              : index === 1
+                              : entry.originalRank === 2
                               ? "bg-gray-100 text-gray-800"
-                              : index === 2
+                              : entry.originalRank === 3
                               ? "bg-orange-100 text-orange-800"
                               : "bg-forest/10 text-forest"
                           }`}
                         >
-                          {index + 1}
+                          {entry.originalRank}
                         </span>
                       </div>
                     </td>
@@ -152,25 +222,18 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                           <div className="font-mono text-sm text-forest font-futura-bold">
                             {formatWallet(entry.wallet)}
                           </div>
-                          <div className="text-xs text-forest/60">
-                            {entry.transactionHashes.length} tx hashes
-                          </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="text-lg font-futura-bold text-forest">
-                        {formatUsdc(entry.totalUsdcSent)} USDC
-                      </div>
-                      <div className="text-xs text-forest/60">
-                        ${(parseFloat(entry.totalUsdcSent) * 1).toFixed(2)}
+                        ${formatUsdc(entry.totalUsdcSent)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="text-sm font-futura-bold text-forest">
                         {entry.transactionCount}
                       </div>
-                      <div className="text-xs text-forest/60">taps</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center">
@@ -215,16 +278,16 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                   <div className="flex items-center">
                     <span
                       className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-futura-bold mr-3 ${
-                        index === 0
+                        entry.originalRank === 1
                           ? "bg-yellow-100 text-yellow-800"
-                          : index === 1
+                          : entry.originalRank === 2
                           ? "bg-gray-100 text-gray-800"
-                          : index === 2
+                          : entry.originalRank === 3
                           ? "bg-orange-100 text-orange-800"
                           : "bg-forest/10 text-forest"
                       }`}
                     >
-                      {index + 1}
+                      {entry.originalRank}
                     </span>
                     <div className="w-8 h-8 bg-gradient-to-r from-forest to-forest/80 rounded-full flex items-center justify-center mr-3">
                       <span className="text-cream text-xs font-futura-bold">
@@ -234,10 +297,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-futura-bold text-forest">
-                      {formatUsdc(entry.totalUsdcSent)} USDC
-                    </div>
-                    <div className="text-xs text-forest/60">
-                      ${(parseFloat(entry.totalUsdcSent) * 1).toFixed(2)}
+                      ${formatUsdc(entry.totalUsdcSent)}
                     </div>
                   </div>
                 </div>
@@ -274,9 +334,8 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             ))}
           </div>
         </div>
-
         {/* Stats */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {/* <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg">
             <div className="text-xl md:text-2xl font-futura-bold text-forest">
               {sortedData.length}
@@ -302,7 +361,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             </div>
             <div className="text-xs md:text-sm text-forest/60">Total Taps</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
