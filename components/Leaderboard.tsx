@@ -44,83 +44,97 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
     return parseFloat(amount).toFixed(2);
   };
 
+  const calculateCapProgress = (amount: string) => {
+    const usdcAmount = parseFloat(amount);
+    const capAmount = 100; // $100 cap
+    return Math.min((usdcAmount / capAmount) * 100, 100);
+  };
+
+  const totalUsdcClaimed = sortedData.reduce(
+    (sum, entry) => sum + parseFloat(entry.totalUsdcSent),
+    0
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-cream py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6 md:mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
-            USDC Transfer Leaderboard
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-futura-bold text-forest mb-4 md:mb-6">
+            🏆 The Tap Day Leaderboard
           </h1>
-          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-            Top contributors by USDC transfer volume and transaction count
+          <p className="text-lg md:text-xl text-forest/80 max-w-3xl mx-auto px-4 mb-6">
+            Who's been sipping the yield the fastest? Find out here.
           </p>
         </div>
 
         {/* Sort Controls */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-white rounded-lg shadow-sm p-1">
+        <div className="flex justify-center mb-8">
+          <div className="bg-white/70 backdrop-blur-sm rounded-lg shadow-sm p-1">
             <button
               onClick={() => setSortBy("amount")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-6 py-3 rounded-md text-sm font-futura-bold transition-colors ${
                 sortBy === "amount"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-forest text-cream"
+                  : "text-forest hover:text-forest/80"
               }`}
             >
-              Sort by Amount
+              Sort by Yield
             </button>
             <button
               onClick={() => setSortBy("transactions")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-6 py-3 rounded-md text-sm font-futura-bold transition-colors ${
                 sortBy === "transactions"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-forest text-cream"
+                  : "text-forest hover:text-forest/80"
               }`}
             >
-              Sort by Transactions
+              Sort by Taps
             </button>
           </div>
         </div>
 
         {/* Leaderboard Table */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
           {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+              <thead className="bg-forest text-cream">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
+                  <th className="px-6 py-4 text-left text-sm font-futura-bold">
                     Rank
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">
-                    Wallet
+                  <th className="px-6 py-4 text-left text-sm font-futura-bold">
+                    Farmer
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold">
+                  <th className="px-6 py-4 text-right text-sm font-futura-bold">
                     Total USDC
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold">
-                    Transactions
+                  <th className="px-6 py-4 text-right text-sm font-futura-bold">
+                    Taps
+                  </th>
+                  <th className="px-6 py-4 text-center text-sm font-futura-bold">
+                    Cap Progress
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-forest/10">
                 {sortedData.map((entry, index) => (
                   <tr
                     key={entry.wallet}
-                    className="hover:bg-gray-50 transition-colors duration-150"
+                    className="hover:bg-white/50 transition-colors duration-150"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <span
-                          className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
+                          className={`inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-futura-bold ${
                             index === 0
                               ? "bg-yellow-100 text-yellow-800"
                               : index === 1
                               ? "bg-gray-100 text-gray-800"
                               : index === 2
                               ? "bg-orange-100 text-orange-800"
-                              : "bg-blue-100 text-blue-800"
+                              : "bg-forest/10 text-forest"
                           }`}
                         >
                           {index + 1}
@@ -129,34 +143,60 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-3">
-                          <span className="text-white text-xs font-bold">
+                        <div className="w-10 h-10 bg-gradient-to-r from-forest to-forest/80 rounded-full flex items-center justify-center mr-3">
+                          <span className="text-cream text-xs font-futura-bold">
                             {entry.wallet.slice(2, 4).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <div className="font-mono text-sm text-gray-900">
+                          <div className="font-mono text-sm text-forest font-futura-bold">
                             {formatWallet(entry.wallet)}
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-forest/60">
                             {entry.transactionHashes.length} tx hashes
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="text-lg font-bold text-gray-900">
+                      <div className="text-lg font-futura-bold text-forest">
                         {formatUsdc(entry.totalUsdcSent)} USDC
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-forest/60">
                         ${(parseFloat(entry.totalUsdcSent) * 1).toFixed(2)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="text-sm font-semibold text-gray-900">
+                      <div className="text-sm font-futura-bold text-forest">
                         {entry.transactionCount}
                       </div>
-                      <div className="text-xs text-gray-500">transactions</div>
+                      <div className="text-xs text-forest/60">taps</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center">
+                        <div className="w-full max-w-xs">
+                          <div className="flex justify-between text-xs text-forest/60 mb-1">
+                            <span>0%</span>
+                            <span>100%</span>
+                          </div>
+                          <div className="w-full bg-forest/20 rounded-full h-2">
+                            <div
+                              className="bg-forest h-2 rounded-full transition-all duration-300"
+                              style={{
+                                width: `${calculateCapProgress(
+                                  entry.totalUsdcSent
+                                )}%`,
+                              }}
+                            ></div>
+                          </div>
+                          <div className="text-xs text-forest/60 mt-1 text-center">
+                            {calculateCapProgress(entry.totalUsdcSent).toFixed(
+                              1
+                            )}
+                            %
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -169,48 +209,66 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             {sortedData.map((entry, index) => (
               <div
                 key={entry.wallet}
-                className="p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150"
+                className="p-4 border-b border-forest/10 hover:bg-white/50 transition-colors duration-150"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
                     <span
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold mr-3 ${
+                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-futura-bold mr-3 ${
                         index === 0
                           ? "bg-yellow-100 text-yellow-800"
                           : index === 1
                           ? "bg-gray-100 text-gray-800"
                           : index === 2
                           ? "bg-orange-100 text-orange-800"
-                          : "bg-blue-100 text-blue-800"
+                          : "bg-forest/10 text-forest"
                       }`}
                     >
                       {index + 1}
                     </span>
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white text-xs font-bold">
+                    <div className="w-8 h-8 bg-gradient-to-r from-forest to-forest/80 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-cream text-xs font-futura-bold">
                         {entry.wallet.slice(2, 4).toUpperCase()}
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-gray-900">
+                    <div className="text-lg font-futura-bold text-forest">
                       {formatUsdc(entry.totalUsdcSent)} USDC
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-forest/60">
                       ${(parseFloat(entry.totalUsdcSent) * 1).toFixed(2)}
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="font-mono text-sm text-gray-900">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="font-mono text-sm text-forest font-futura-bold">
                     {formatWallet(entry.wallet)}
                   </div>
-                  <div className="text-sm font-semibold text-gray-900">
-                    {entry.transactionCount} tx
+                  <div className="text-sm font-futura-bold text-forest">
+                    {entry.transactionCount} taps
                   </div>
                 </div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-forest/60 mb-2">
                   {entry.transactionHashes.length} transaction hashes
+                </div>
+                <div className="w-full">
+                  <div className="flex justify-between text-xs text-forest/60 mb-1">
+                    <span>0%</span>
+                    <span>100%</span>
+                  </div>
+                  <div className="w-full bg-forest/20 rounded-full h-2 mb-1">
+                    <div
+                      className="bg-forest h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${calculateCapProgress(entry.totalUsdcSent)}%`,
+                      }}
+                    ></div>
+                  </div>
+                  <div className="text-xs text-forest/60 text-center">
+                    {calculateCapProgress(entry.totalUsdcSent).toFixed(1)}% of
+                    cap
+                  </div>
                 </div>
               </div>
             ))}
@@ -219,39 +277,30 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
 
         {/* Stats */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
-            <div className="text-xl md:text-2xl font-bold text-gray-900">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg">
+            <div className="text-xl md:text-2xl font-futura-bold text-forest">
               {sortedData.length}
             </div>
-            <div className="text-xs md:text-sm text-gray-600">
-              Total Participants
+            <div className="text-xs md:text-sm text-forest/60">
+              Total Farmers
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
-            <div className="text-xl md:text-2xl font-bold text-gray-900">
-              {formatUsdc(
-                sortedData
-                  .reduce(
-                    (sum, entry) => sum + parseFloat(entry.totalUsdcSent),
-                    0
-                  )
-                  .toString()
-              )}
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg">
+            <div className="text-xl md:text-2xl font-futura-bold text-forest">
+              {formatUsdc(totalUsdcClaimed.toString())}
             </div>
-            <div className="text-xs md:text-sm text-gray-600">
-              Total USDC Transferred
+            <div className="text-xs md:text-sm text-forest/60">
+              Total USDC Claimed
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg sm:col-span-2 lg:col-span-1">
-            <div className="text-xl md:text-2xl font-bold text-gray-900">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg sm:col-span-2 lg:col-span-1">
+            <div className="text-xl md:text-2xl font-futura-bold text-forest">
               {sortedData.reduce(
                 (sum, entry) => sum + entry.transactionCount,
                 0
               )}
             </div>
-            <div className="text-xs md:text-sm text-gray-600">
-              Total Transactions
-            </div>
+            <div className="text-xs md:text-sm text-forest/60">Total Taps</div>
           </div>
         </div>
       </div>
