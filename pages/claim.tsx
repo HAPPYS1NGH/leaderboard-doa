@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { usePrivy, useLogin } from "@privy-io/react-auth";
 import { PrivyClient } from "@privy-io/server-auth";
 import { GetServerSideProps } from "next";
 import Navigation from "../components/Navigation";
-import axios from "axios";
+import leaderboardData from "../constants/usdc_transfer_leaderboard.json";
+import clientSideClient from "../lib/namespace-client";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const cookieAuthToken = req.cookies["privy-token"];
@@ -37,87 +38,263 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
 };
 
+type LeaderboardEntry = {
+  totalUsdcSent: string;
+  transactionCount: number;
+  destinationAddresses: string[];
+};
+
+type LeaderboardData = Record<string, LeaderboardEntry>;
+
 export default function ClaimPage() {
   const { login } = useLogin();
-  const { authenticated, user, logout, getAccessToken } = usePrivy();
-  const [isSigning, setIsSigning] = useState(false);
-  const [signature, setSignature] = useState<string>("");
+  const { authenticated, user, logout } = usePrivy();
   const [error, setError] = useState<string>("");
 
-  const handleSignMessage = async () => {
-    if (!user) return;
+  // Subname claiming states
+  const [selectedAddress, setSelectedAddress] = useState<string>("");
+  const [subnameLabel, setSubnameLabel] = useState<string>("");
+  const [availabilityStatus, setAvailabilityStatus] = useState<
+    "checking" | "available" | "unavailable" | "idle"
+  >("idle");
+  const [isCreatingSubname, setIsCreatingSubname] = useState(false);
+  const [subnameCreated, setSubnameCreated] = useState<string>("");
+  const [eligibleAddresses, setEligibleAddresses] = useState<string[]>([]);
+  const [showSubnameForm, setShowSubnameForm] = useState(false);
+  const [existingSubnames, setExistingSubnames] = useState<string[]>([]);
+  const [isLoadingSubnames, setIsLoadingSubnames] = useState(false);
+  const [manualAddress, setManualAddress] = useState<string>("");
+  const [showManualInput, setShowManualInput] = useState(false);
 
-    setIsSigning(true);
-    setError("");
+  // Check eligible addresses when user connects
+  const checkEligibleAddresses = () => {
+    if (!user?.wallet?.address) return;
 
-    try {
-      // Get the access token for API calls
-      const accessToken = await getAccessToken();
-      if (!accessToken) {
-        throw new Error("Failed to get access token");
-      }
+    const connectedAddress = user.wallet.address.toLowerCase();
+    const eligible = findEligibleAddresses(connectedAddress);
 
-      // Create the message to sign
-      const message = `I am signing this message to verify my identity for the Tap Day Leaderboard claim.\n\nTimestamp: ${Date.now()}`;
+    setEligibleAddresses(eligible);
 
-      // Get the user's wallet information
-      const wallet = user.wallet;
-      if (!wallet) {
-        throw new Error("No wallet found. Please connect your wallet first.");
-      }
-
-      // For now, we'll use a simplified approach
-      // In production, you would get the wallet ID from the user's linked accounts
-      const walletId = wallet.address; // Using address as a fallback
-      const chainType = wallet.chainType || "ethereum";
-
-      const endpoint =
-        chainType === "solana"
-          ? "/api/solana/sign_message"
-          : "/api/ethereum/personal_sign";
-
-      const response = await axios.post(
-        endpoint,
-        {
-          message,
-          wallet_id: walletId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const responseSignature = response.data.data.signature;
-      setSignature(responseSignature);
-
-      console.log("Signed message:", responseSignature);
-      console.log("User wallet address:", wallet.address);
-      console.log("User linked accounts:", user.linkedAccounts);
-    } catch (error) {
-      console.error("Error signing message:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to sign message"
-      );
-    } finally {
-      setIsSigning(false);
+    if (eligible.length > 0 && eligible[0]) {
+      setSelectedAddress(eligible[0]); // Auto-select first eligible address
+      setShowSubnameForm(true);
     }
   };
 
+  // Helper function to find eligible addresses for any given address
+  const findEligibleAddresses = (inputAddress: string): string[] => {
+    const address = inputAddress.toLowerCase();
+    const typedLeaderboardData = leaderboardData as LeaderboardData;
+    const eligible: string[] = [];
+
+    // Check if address is in leaderboard as a sender (key)
+    if (typedLeaderboardData[address]) {
+      eligible.push(address); // Can claim subname for themselves (the sender)
+    }
+
+    // Check if address is a destination address for any sender
+    for (const [senderAddress, data] of Object.entries(typedLeaderboardData)) {
+      if (
+        data.destinationAddresses.some((dest) => dest.toLowerCase() === address)
+      ) {
+        // If this address received USDC, they can claim for the sender who sent to them
+        if (!eligible.includes(senderAddress.toLowerCase())) {
+          eligible.push(senderAddress.toLowerCase());
+        }
+      }
+    }
+
+    return eligible;
+  };
+
+  // Handle manual address input and check eligibility
+  const checkManualAddress = () => {
+    if (
+      !manualAddress ||
+      manualAddress.length !== 42 ||
+      !manualAddress.startsWith("0x")
+    ) {
+      setError("Please enter a valid Ethereum address");
+      return;
+    }
+
+    const eligible = findEligibleAddresses(manualAddress);
+    setEligibleAddresses(eligible);
+
+    if (eligible.length > 0 && eligible[0]) {
+      setSelectedAddress(eligible[0]);
+      setShowSubnameForm(true);
+      setError("");
+    } else {
+      setError(
+        "This address is not eligible for subname claiming. Only addresses that participated in the Tap Day Leaderboard can claim subnames."
+      );
+      setShowSubnameForm(false);
+    }
+  };
+
+  // Reset to wallet-based checking
+  const resetToWalletCheck = () => {
+    setManualAddress("");
+    setShowManualInput(false);
+    setError("");
+    if (authenticated && user?.wallet?.address) {
+      checkEligibleAddresses();
+    } else {
+      setEligibleAddresses([]);
+      setShowSubnameForm(false);
+    }
+  };
+
+  // Check existing subnames for an address
+  const checkExistingSubnames = async (address: string) => {
+    if (!address) return;
+
+    setIsLoadingSubnames(true);
+    try {
+      const response = await fetch(`/api/subname/lookup?address=${address}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setExistingSubnames(result.subnames || []);
+      } else {
+        console.error("Failed to lookup existing subnames:", result.error);
+        setExistingSubnames([]);
+      }
+    } catch (error) {
+      console.error("Error looking up existing subnames:", error);
+      setExistingSubnames([]);
+    } finally {
+      setIsLoadingSubnames(false);
+    }
+  };
+
+  // Check subname availability with debouncing
+  const checkAvailability = async (label: string) => {
+    if (!label || label.length < 3) {
+      setAvailabilityStatus("idle");
+      return;
+    }
+
+    setAvailabilityStatus("checking");
+
+    try {
+      const fullName = `${label}.deptofagri.eth`;
+      const isAvailable = await clientSideClient.isSubnameAvailable(fullName);
+      setAvailabilityStatus(isAvailable ? "available" : "unavailable");
+    } catch (error) {
+      console.error("Error checking availability:", error);
+      setError("Failed to check availability");
+      setAvailabilityStatus("idle");
+    }
+  };
+
+  // Handle subname label change with debounced availability check
+  const handleLabelChange = (value: string) => {
+    setSubnameLabel(value);
+    setError("");
+
+    // Debounce availability check
+    const timeoutId = setTimeout(() => {
+      checkAvailability(value);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  };
+
+  // Create subname
+  const createSubname = async () => {
+    if (!selectedAddress || !subnameLabel) {
+      setError("Please select an address and enter a label");
+      return;
+    }
+
+    if (availabilityStatus !== "available") {
+      setError("Please choose an available subname");
+      return;
+    }
+
+    if (existingSubnames.length > 0) {
+      setError(
+        "This address already has a subname. Only one subname per address is allowed."
+      );
+      return;
+    }
+
+    setIsCreatingSubname(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/subname/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          label: subnameLabel,
+          address: selectedAddress,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubnameCreated(`${subnameLabel}.deptofagri.eth`);
+        setSubnameLabel("");
+        setAvailabilityStatus("idle");
+      } else {
+        setError(result.error || "Failed to create subname");
+      }
+    } catch (error) {
+      console.error("Error creating subname:", error);
+      setError("Failed to create subname");
+    } finally {
+      setIsCreatingSubname(false);
+    }
+  };
+
+  // Check eligible addresses when user authenticates
+  useEffect(() => {
+    if (authenticated && user?.wallet?.address) {
+      checkEligibleAddresses();
+    }
+  }, [authenticated, user?.wallet?.address]);
+
+  // Check existing subnames when selected address changes
+  useEffect(() => {
+    if (selectedAddress) {
+      checkExistingSubnames(selectedAddress);
+      // Clear previous form state when switching addresses
+      setSubnameLabel("");
+      setAvailabilityStatus("idle");
+      setError("");
+    }
+  }, [selectedAddress]);
+
   const handleLogout = () => {
     logout();
-    setSignature("");
     setError("");
+    setSubnameCreated("");
+    setSubnameLabel("");
+    setSelectedAddress("");
+    setEligibleAddresses([]);
+    setShowSubnameForm(false);
+    setAvailabilityStatus("idle");
+    setExistingSubnames([]);
+    setIsLoadingSubnames(false);
+    setManualAddress("");
+    setShowManualInput(false);
   };
 
   return (
     <>
       <Head>
-        <title>Claim - The Tap Day Leaderboard</title>
+        <title>Assign Subnames - The Tap Day Leaderboard</title>
         <meta
           name="description"
-          content="Claim your rewards from the Tap Day Leaderboard"
+          content="Assign custom deptofagri.eth subnames to eligible sender addresses from the Tap Day Leaderboard"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -128,12 +305,42 @@ export default function ClaimPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-futura-bold text-forest mb-4">
-              🏆 Claim Your Rewards
+              🏆 Assign Leaderboard Subnames
             </h1>
             <p className="text-lg text-forest/70 max-w-2xl mx-auto">
-              Connect your wallet and sign a message to verify your identity and
-              claim your rewards from the Tap Day Leaderboard.
+              Connect your wallet to assign a custom deptofagri.eth subname to
+              eligible sender addresses from the Tap Day Leaderboard.
             </p>
+
+            {/* How it works explanation */}
+            <div className="mt-8 bg-forest/5 rounded-xl p-6 max-w-3xl mx-auto">
+              <h3 className="text-lg font-futura-bold text-forest mb-3">
+                How It Works
+              </h3>
+              <div className="text-sm text-forest/70 space-y-2">
+                <p>
+                  • Connect your wallet OR enter any address to check
+                  eligibility from the Tap Day Leaderboard
+                </p>
+                <p>
+                  • If you sent USDC: You can claim a subname for yourself (the
+                  sender)
+                </p>
+                <p>
+                  • If you received USDC: You can claim a subname for the sender
+                  who sent to you
+                </p>
+                <p>
+                  • Pick an available subname label (e.g., "myname" becomes
+                  "myname.deptofagri.eth")
+                </p>
+                <p>
+                  • Subnames are awarded to sender addresses (leaderboard
+                  participants)
+                </p>
+                <p>• Only ONE subname per address is allowed</p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-forest/10 p-8 max-w-2xl mx-auto">
@@ -160,6 +367,28 @@ export default function ClaimPage() {
                 >
                   Connect Wallet
                 </button>
+
+                {/* Alternative: Manual Address Check */}
+                <div className="mt-6 pt-6 border-t border-forest/10">
+                  <p className="text-sm text-forest/60 mb-4">
+                    Or check eligibility without connecting a wallet:
+                  </p>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={manualAddress}
+                      onChange={(e) => setManualAddress(e.target.value)}
+                      placeholder="Enter Ethereum address (0x...)"
+                      className="w-full p-3 border border-forest/20 rounded-lg font-mono text-sm focus:border-forest focus:outline-none"
+                    />
+                    <button
+                      onClick={checkManualAddress}
+                      className="w-full bg-forest/10 hover:bg-forest/20 text-forest font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                    >
+                      Check Address Eligibility
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="space-y-6">
@@ -177,8 +406,81 @@ export default function ClaimPage() {
                   <p className="text-xs text-forest/40 mt-1">
                     Chain: {user?.wallet?.chainType || "Unknown"}
                   </p>
+
+                  {/* Manual Address Option Toggle */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setShowManualInput(!showManualInput)}
+                      className="text-sm text-forest hover:text-forest/80 underline"
+                    >
+                      {showManualInput
+                        ? "Use connected wallet"
+                        : "Check different address instead"}
+                    </button>
+                  </div>
                 </div>
 
+                {/* Manual Address Input */}
+                {showManualInput && (
+                  <div className="space-y-3">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-blue-600 mr-2">🔍</span>
+                        <span className="font-futura-bold text-blue-800">
+                          Check Any Address
+                        </span>
+                      </div>
+                      <p className="text-sm text-blue-700 mb-3">
+                        Enter any Ethereum address to check its eligibility for
+                        subname claiming.
+                      </p>
+
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={manualAddress}
+                          onChange={(e) => setManualAddress(e.target.value)}
+                          placeholder="0x..."
+                          className="w-full p-3 border border-blue-300 rounded-lg font-mono text-sm focus:border-blue-500 focus:outline-none"
+                        />
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={checkManualAddress}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                          >
+                            Check Eligibility
+                          </button>
+                          <button
+                            onClick={resetToWalletCheck}
+                            className="px-4 py-2 text-blue-600 hover:text-blue-800 font-futura-bold"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Eligibility Status */}
+                {eligibleAddresses.length === 0 &&
+                  showSubnameForm === false && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-orange-600 mr-2">⚠️</span>
+                        <span className="font-futura-bold text-orange-800">
+                          Not Eligible
+                        </span>
+                      </div>
+                      <p className="text-sm text-orange-700">
+                        This wallet address is not eligible for a subname claim.
+                        Only addresses that participated in the Tap Day
+                        Leaderboard can claim subnames.
+                      </p>
+                    </div>
+                  )}
+
+                {/* Error Display */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                     <div className="flex items-center mb-2">
@@ -191,48 +493,237 @@ export default function ClaimPage() {
                   </div>
                 )}
 
-                <div className="space-y-4">
-                  <button
-                    onClick={handleSignMessage}
-                    disabled={isSigning}
-                    className="w-full bg-forest hover:bg-forest/90 disabled:bg-forest/50 text-cream font-futura-bold py-3 px-6 rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
-                  >
-                    {isSigning ? "Signing..." : "Sign Message & Claim"}
-                  </button>
+                {/* Subname Creation Success */}
+                {subnameCreated && (
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div className="flex items-center mb-2">
+                      <span className="text-green-600 mr-2">🎉</span>
+                      <span className="font-futura-bold text-green-800">
+                        Subname Created Successfully!
+                      </span>
+                    </div>
+                    <p className="text-sm text-green-700">
+                      Your subname <strong>{subnameCreated}</strong> has been
+                      created and linked to the selected sender address.
+                    </p>
+                  </div>
+                )}
 
-                  {signature && (
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                {/* Subname Claiming Form */}
+                {showSubnameForm && eligibleAddresses.length > 0 && (
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
-                        <span className="text-green-600 mr-2">✅</span>
-                        <span className="font-futura-bold text-green-800">
-                          Message Signed Successfully!
+                        <span className="text-blue-600 mr-2">✅</span>
+                        <span className="font-futura-bold text-blue-800">
+                          Eligible for Subname!
                         </span>
                       </div>
-                      <p className="text-sm text-green-700">
-                        Your signature has been recorded. Your rewards will be
-                        processed shortly.
+                      <p className="text-sm text-blue-700">
+                        Found {eligibleAddresses.length} sender address
+                        {eligibleAddresses.length > 1 ? "es" : ""} eligible for
+                        subname assignment:
                       </p>
-                      <div className="mt-3 p-2 bg-green-100 rounded text-xs font-mono text-green-800 break-all">
-                        {signature.slice(0, 50)}...
+                      <div className="mt-2 text-xs text-blue-600">
+                        {showManualInput
+                          ? `Authority from: ${manualAddress.slice(
+                              0,
+                              6
+                            )}...${manualAddress.slice(-4)}`
+                          : "Authority from your connected wallet and Tap Day Leaderboard participation"}
                       </div>
                     </div>
-                  )}
 
-                  <button
-                    onClick={handleLogout}
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-forest font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
-                  >
-                    Disconnect Wallet
-                  </button>
-                </div>
+                    {/* Address Selection */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-futura-bold text-forest">
+                        Select Sender Address to Assign Subname To:
+                      </label>
+                      <select
+                        value={selectedAddress}
+                        onChange={(e) => setSelectedAddress(e.target.value)}
+                        className="w-full p-3 border border-forest/20 rounded-lg font-mono text-sm focus:border-forest focus:outline-none"
+                      >
+                        {eligibleAddresses.map((address) => {
+                          const connectedWalletLower =
+                            user?.wallet?.address?.toLowerCase();
+                          const manualAddressLower =
+                            manualAddress.toLowerCase();
+                          const addressLower = address.toLowerCase();
+                          const typedLeaderboardData =
+                            leaderboardData as LeaderboardData;
+
+                          let label = `${address.slice(0, 6)}...${address.slice(
+                            -4
+                          )}`;
+                          let relationship = "";
+
+                          // This is always a sender address (key in leaderboard)
+                          if (addressLower === connectedWalletLower) {
+                            relationship = " (You are the sender)";
+                          } else if (addressLower === manualAddressLower) {
+                            relationship = " (Checked address is sender)";
+                          } else {
+                            // Check if connected/manual address received from this sender
+                            const checkAddress = showManualInput
+                              ? manualAddressLower
+                              : connectedWalletLower;
+                            if (
+                              checkAddress &&
+                              typedLeaderboardData[
+                                addressLower
+                              ]?.destinationAddresses.some(
+                                (dest) => dest.toLowerCase() === checkAddress
+                              )
+                            ) {
+                              relationship = " (Sent USDC to you)";
+                            } else {
+                              relationship = " (Sender)";
+                            }
+                          }
+
+                          return (
+                            <option key={address} value={address}>
+                              {label}
+                              {relationship}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    {/* Existing Subnames Display */}
+                    {selectedAddress && (
+                      <div className="space-y-2">
+                        <label className="block text-sm font-futura-bold text-forest">
+                          Existing Subnames for this Sender Address:
+                        </label>
+                        {isLoadingSubnames ? (
+                          <div className="flex items-center space-x-2 text-sm text-forest/60">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-forest"></div>
+                            <span>Loading existing subnames...</span>
+                          </div>
+                        ) : existingSubnames.length > 0 ? (
+                          <div className="space-y-2">
+                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                              <p className="text-sm text-orange-700 mb-2">
+                                This address already has a subname:
+                              </p>
+                              <div className="space-y-1">
+                                {existingSubnames.map((subname, index) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm font-mono bg-orange-100 p-2 rounded text-orange-800"
+                                  >
+                                    {subname}
+                                  </div>
+                                ))}
+                              </div>
+                              <p className="text-xs text-orange-600 mt-2">
+                                Only one subname per address is allowed.
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                            <p className="text-sm text-gray-600">
+                              No existing subnames found for this address.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Subname Label Input */}
+                    {existingSubnames.length === 0 && (
+                      <div className="space-y-2">
+                        <label className="block text-sm font-futura-bold text-forest">
+                          Choose Your Subname:
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={subnameLabel}
+                            onChange={(e) => {
+                              const value = e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]/g, "");
+                              setSubnameLabel(value);
+                              handleLabelChange(value);
+                            }}
+                            placeholder="Enter label (e.g., myname)"
+                            className="w-full p-3 border border-forest/20 rounded-lg focus:border-forest focus:outline-none pr-32"
+                            maxLength={63}
+                          />
+                          <span className="absolute right-3 top-3 text-sm text-forest/40">
+                            .deptofagri.eth
+                          </span>
+                        </div>
+
+                        {/* Availability Status */}
+                        {subnameLabel.length >= 3 && (
+                          <div className="flex items-center space-x-2 text-sm">
+                            {availabilityStatus === "checking" && (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-forest"></div>
+                                <span className="text-forest/60">
+                                  Checking availability...
+                                </span>
+                              </>
+                            )}
+                            {availabilityStatus === "available" && (
+                              <>
+                                <span className="text-green-600">✅</span>
+                                <span className="text-green-700 font-futura-bold">
+                                  Available!
+                                </span>
+                              </>
+                            )}
+                            {availabilityStatus === "unavailable" && (
+                              <>
+                                <span className="text-red-600">❌</span>
+                                <span className="text-red-700 font-futura-bold">
+                                  Not available
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Create Subname Button */}
+                        <button
+                          onClick={createSubname}
+                          disabled={
+                            isCreatingSubname ||
+                            availabilityStatus !== "available" ||
+                            !selectedAddress ||
+                            !subnameLabel
+                          }
+                          className="w-full bg-forest hover:bg-forest/90 disabled:bg-forest/50 text-cream font-futura-bold py-3 px-6 rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                        >
+                          {isCreatingSubname
+                            ? "Assigning Subname..."
+                            : "Assign Subname"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-forest font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                >
+                  Disconnect Wallet
+                </button>
               </div>
             )}
           </div>
 
           <div className="mt-8 text-center">
             <p className="text-sm text-forest/50">
-              By connecting your wallet and signing the message, you agree to
-              our terms of service.
+              By connecting your wallet and claiming a subname, you agree to our
+              terms of service.
             </p>
           </div>
         </div>

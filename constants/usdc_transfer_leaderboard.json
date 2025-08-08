@@ -25,7 +25,7 @@
   "0x06378b7474ad50256feb83265517edec9d990852": {
     "totalUsdcSent": "68.640765",
     "transactionCount": 9,
-    "destinationAddresses": []
+    "destinationAddresses": ["0x5560650bf336dafc2aab23e6c2bcc78028877725"]
   },
   "0xe1c8aca795af313505d2344ac2f317d5168f255e": {
     "totalUsdcSent": "66.24932",
