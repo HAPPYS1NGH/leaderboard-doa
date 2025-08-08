@@ -4,6 +4,7 @@ import { PrivyClient } from "@privy-io/server-auth";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Navigation from "../components/Navigation";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const cookieAuthToken = req.cookies["privy-token"];
@@ -42,19 +43,26 @@ export default function LoginPage() {
         <title>Login · Privy</title>
       </Head>
 
+      <Navigation />
       <main className="flex min-h-screen min-w-full">
         <div className="flex bg-privy-light-blue flex-1 p-6 justify-center items-center">
           <div>
             <div>
               <Portal style={{ maxWidth: "100%", height: "auto" }} />
             </div>
-            <div className="mt-6 flex justify-center text-center">
+            <div className="mt-6 flex justify-center text-center space-x-4">
               <button
                 className="bg-violet-600 hover:bg-violet-700 py-3 px-6 text-white rounded-lg"
                 onClick={login}
               >
                 Log in
               </button>
+              <a
+                href="/leaderboard"
+                className="bg-blue-600 hover:bg-blue-700 py-3 px-6 text-white rounded-lg inline-block"
+              >
+                View Leaderboard
+              </a>
             </div>
           </div>
         </div>
