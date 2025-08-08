@@ -5,7 +5,7 @@ interface LeaderboardEntry {
   wallet: string;
   totalUsdcSent: string;
   transactionCount: number;
-  transactionHashes: string[];
+  destinationAddresses?: string[];
   originalRank: number;
 }
 
@@ -24,7 +24,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
         wallet,
         totalUsdcSent: data.totalUsdcSent,
         transactionCount: data.transactionCount,
-        transactionHashes: data.transactionHashes,
+        destinationAddresses: data.destinationAddresses || [],
         originalRank: 0, // Will be set below
       }))
       .sort((a, b) => parseFloat(b.totalUsdcSent) - parseFloat(a.totalUsdcSent))
@@ -310,7 +310,8 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
                   </div>
                 </div>
                 <div className="text-xs text-forest/60 mb-2">
-                  {entry.transactionHashes.length} transaction hashes
+                  {entry.destinationAddresses?.length || 0} destination
+                  addresses
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between text-xs text-forest/60 mb-1">

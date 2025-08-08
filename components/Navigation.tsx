@@ -1,9 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { usePrivy } from "@privy-io/react-auth";
 
 const Navigation: React.FC = () => {
   const router = useRouter();
+  const { authenticated, logout } = usePrivy();
 
   return (
     <nav className="bg-white/70 backdrop-blur-sm shadow-sm border-b border-forest/10">
@@ -25,6 +27,24 @@ const Navigation: React.FC = () => {
             >
               Leaderboard
             </Link>
+            <Link
+              href="/claim"
+              className={`px-3 py-2 rounded-md text-sm font-futura-bold transition-colors ${
+                router.pathname === "/claim"
+                  ? "bg-forest text-cream"
+                  : "text-forest hover:text-forest/80"
+              }`}
+            >
+              Claim
+            </Link>
+            {authenticated && (
+              <button
+                onClick={logout}
+                className="px-3 py-2 rounded-md text-sm font-futura-bold transition-colors text-forest hover:text-forest/80"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>

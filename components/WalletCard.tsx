@@ -3,7 +3,6 @@ import {
   getAccessToken,
   useSessionSigners,
   useSignMessage,
-  useSignMessage as useSignMessageSolana,
   WalletWithMetadata,
 } from "@privy-io/react-auth";
 import axios from "axios";
@@ -16,8 +15,7 @@ interface WalletCardProps {
 
 export default function WalletCard({ wallet }: WalletCardProps) {
   const { addSessionSigners, removeSessionSigners } = useSessionSigners();
-  const { signMessage: signMessageEthereum } = useSignMessage();
-  const { signMessage: signMessageSolana } = useSignMessageSolana();
+  const { signMessage } = useSignMessage();
   const [isLoading, setIsLoading] = useState(false);
   const [isRemoteSigning, setIsRemoteSigning] = useState(false);
   const [isClientSigning, setIsClientSigning] = useState(false);
@@ -71,35 +69,23 @@ export default function WalletCard({ wallet }: WalletCardProps) {
     setIsClientSigning(true);
     try {
       const message = `Signing this message to verify ownership of ${wallet.address}`;
-      let signature;
-      if (wallet.chainType === "ethereum") {
-        const result = await signMessageEthereum({ message });
-        signature = result.signature;
-      } else if (wallet.chainType === "solana") {
-        const result = await signMessageSolana({
-          message,
-        });
-        signature = result.signature;
-      }
+      const result = await signMessage({ message });
+      const signature = result.signature;
       console.log("Message signed on client! Signature: ", signature);
     } catch (error) {
       console.error("Error signing message:", error);
     } finally {
       setIsClientSigning(false);
     }
-  }, [wallet]);
+  }, [wallet, signMessage]);
 
   const handleRemoteSign = useCallback(async () => {
     setIsRemoteSigning(true);
     try {
       const authToken = await getAccessToken();
-      const path =
-        wallet.chainType === "ethereum"
-          ? "/api/ethereum/personal_sign"
-          : "/api/solana/sign_message";
       const message = `Signing this message to verify ownership of ${wallet.address}`;
       const response = await axios.post(
-        path,
+        "/api/ethereum/personal_sign",
         {
           wallet_id: wallet.id,
           message: message,
