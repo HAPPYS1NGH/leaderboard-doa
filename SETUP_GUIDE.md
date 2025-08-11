@@ -8,6 +8,7 @@ Create a `.env.local` file in the root directory with:
 NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id_here
 PRIVY_APP_SECRET=your_privy_app_secret_here
 SESSION_SIGNER_SECRET=your_session_signer_secret_here
+BASESCAN_API_KEY=your_basescan_api_key_here
 ```
 
 ## 2. Get Privy Credentials
@@ -17,7 +18,17 @@ SESSION_SIGNER_SECRET=your_session_signer_secret_here
 3. Copy the App ID and App Secret
 4. Generate a Session Signer Secret
 
-## 3. Test the Integration
+## 3. Get Basescan API Key
+
+1. Go to [Basescan](https://basescan.org)
+2. Create a free account
+3. Navigate to the API section in your account dashboard
+4. Generate a new API key
+5. Copy the API key to your `.env.local` file
+
+> **Note:** The Basescan API key is used to verify USDC transactions on Base blockchain to ensure users have the authority to claim subnames for specific addresses.
+
+## 4. Test the Integration
 
 1. Run the development server: `npm run dev`
 2. Visit `http://localhost:3000/claim`
@@ -25,7 +36,7 @@ SESSION_SIGNER_SECRET=your_session_signer_secret_here
 4. Connect your wallet
 5. Click "Sign Message & Claim"
 
-## 4. Current Status
+## 5. Current Status
 
 ✅ **Working Features:**
 

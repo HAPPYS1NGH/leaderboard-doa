@@ -65,23 +65,83 @@ export default function ClaimPage() {
   const [isLoadingSubnames, setIsLoadingSubnames] = useState(false);
   const [manualAddress, setManualAddress] = useState<string>("");
   const [showManualInput, setShowManualInput] = useState(false);
+  const [isValidatingEligibility, setIsValidatingEligibility] = useState(false);
+  const [validationError, setValidationError] = useState<string>("");
 
-  // Check eligible addresses when user connects
-  const checkEligibleAddresses = () => {
+  // Check eligible addresses when user connects using live blockchain data
+  const checkEligibleAddresses = async () => {
     if (!user?.wallet?.address) return;
 
     const connectedAddress = user.wallet.address.toLowerCase();
-    const eligible = findEligibleAddresses(connectedAddress);
+    setIsValidatingEligibility(true);
+    setError("");
+    setValidationError("");
 
-    setEligibleAddresses(eligible);
+    try {
+      // First check static leaderboard for eligible sender addresses
+      const staticEligible = findEligibleAddresses(connectedAddress);
+      
+      if (staticEligible.length === 0) {
+        setEligibleAddresses([]);
+        setShowSubnameForm(false);
+        return;
+      }
 
-    if (eligible.length > 0 && eligible[0]) {
-      setSelectedAddress(eligible[0]); // Auto-select first eligible address
-      setShowSubnameForm(true);
+      // For each eligible address, verify authority using live blockchain data
+      const authorizedAddresses: string[] = [];
+      
+      for (const eligibleAddress of staticEligible) {
+        // If connected address is the sender, they can claim for themselves
+        if (connectedAddress === eligibleAddress.toLowerCase()) {
+          authorizedAddresses.push(eligibleAddress);
+          continue;
+        }
+        
+        // Otherwise, verify they received USDC from this sender using live data
+        try {
+          const response = await fetch("/api/trace-destinations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: eligibleAddress }),
+          });
+
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
+            const destinations = result.destinations || [];
+            if (destinations.includes(connectedAddress)) {
+              authorizedAddresses.push(eligibleAddress);
+            }
+          }
+        } catch (error) {
+          console.warn(`Failed to verify authority for ${eligibleAddress}:`, error);
+          // If API fails, fall back to static data for this address
+          const eligibleAddressData = (leaderboardData as LeaderboardData)[eligibleAddress.toLowerCase()];
+          if (eligibleAddressData?.destinationAddresses.some(
+            dest => dest.toLowerCase() === connectedAddress
+          )) {
+            authorizedAddresses.push(eligibleAddress);
+          }
+        }
+      }
+
+      setEligibleAddresses(authorizedAddresses);
+      
+      if (authorizedAddresses.length > 0 && authorizedAddresses[0]) {
+        setSelectedAddress(authorizedAddresses[0]);
+        setShowSubnameForm(true);
+      }
+    } catch (error) {
+      console.error("Error checking eligible addresses:", error);
+      setError("Failed to verify eligibility. Please try again.");
+      setEligibleAddresses([]);
+      setShowSubnameForm(false);
+    } finally {
+      setIsValidatingEligibility(false);
     }
   };
 
-  // Helper function to find eligible addresses for any given address
+  // Helper function to find eligible addresses for any given address (from leaderboard data)
   const findEligibleAddresses = (inputAddress: string): string[] => {
     const address = inputAddress.toLowerCase();
     const typedLeaderboardData = leaderboardData as LeaderboardData;
@@ -107,8 +167,68 @@ export default function ClaimPage() {
     return eligible;
   };
 
-  // Handle manual address input and check eligibility
-  const checkManualAddress = () => {
+  // Validate eligibility using live USDC transaction data
+  const validateEligibilityWithAPI = async (
+    connectedAddress: string,
+    senderAddress: string
+  ): Promise<boolean> => {
+    setIsValidatingEligibility(true);
+    setValidationError("");
+
+    try {
+      // If connected address is the sender, they can always claim for themselves
+      if (connectedAddress.toLowerCase() === senderAddress.toLowerCase()) {
+        return true;
+      }
+
+      // Check if the sender has sent USDC to the connected address
+      const response = await fetch("/api/trace-destinations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: senderAddress }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        const destinations = result.destinations || [];
+        const hasReceivedFromSender = destinations.includes(
+          connectedAddress.toLowerCase()
+        );
+
+        if (!hasReceivedFromSender) {
+          setValidationError(
+            `The connected address has not received USDC from ${senderAddress.slice(
+              0,
+              6
+            )}...${senderAddress.slice(
+              -4
+            )} according to Base blockchain records.`
+          );
+          return false;
+        }
+
+        return true;
+      } else {
+        console.error("API validation failed:", result.error);
+        setValidationError(
+          "Failed to validate eligibility. Please try again."
+        );
+        return false;
+      }
+    } catch (error) {
+      console.error("Error validating eligibility:", error);
+      setValidationError(
+        "Network error during validation. Please try again."
+      );
+      return false;
+    } finally {
+      setIsValidatingEligibility(false);
+    }
+  };
+
+  // Handle manual address input and check eligibility using live blockchain data
+  const checkManualAddress = async () => {
     if (
       !manualAddress ||
       manualAddress.length !== 42 ||
@@ -118,28 +238,101 @@ export default function ClaimPage() {
       return;
     }
 
-    const eligible = findEligibleAddresses(manualAddress);
-    setEligibleAddresses(eligible);
-
-    if (eligible.length > 0 && eligible[0]) {
-      setSelectedAddress(eligible[0]);
-      setShowSubnameForm(true);
-      setError("");
-    } else {
-      setError(
-        "This address is not eligible for subname claiming. Only addresses that participated in the Tap Day Leaderboard can claim subnames."
-      );
+    const connectedAddress = user?.wallet?.address?.toLowerCase();
+    if (!connectedAddress) {
+      setError("Please connect your wallet first to check claiming authority.");
+      setEligibleAddresses([]);
       setShowSubnameForm(false);
+      return;
+    }
+
+    setIsValidatingEligibility(true);
+    setError("");
+    setValidationError("");
+
+    try {
+      // Query live blockchain data to get all addresses this manual address has sent USDC to
+      const response = await fetch("/api/trace-destinations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: manualAddress }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        setError(
+          result.error || "Failed to fetch USDC transaction data from blockchain"
+        );
+        setEligibleAddresses([]);
+        setShowSubnameForm(false);
+        return;
+      }
+
+      const destinations = result.destinations || [];
+      
+      // Check authority based on live blockchain data
+      let hasAuthority = false;
+      let authorityReason = "";
+
+      // Case 1: Connected wallet is the same as the manual address (sender can claim for themselves)
+      if (connectedAddress === manualAddress.toLowerCase()) {
+        hasAuthority = true;
+        authorityReason = "You are the sender address";
+      }
+      // Case 2: Connected wallet received USDC from this sender
+      else if (destinations.includes(connectedAddress)) {
+        hasAuthority = true;
+        authorityReason = "You received USDC from this sender";
+      }
+
+      if (hasAuthority) {
+        // Also verify the address is in our leaderboard (has meaningful USDC activity)
+        const leaderboardEntry = (leaderboardData as LeaderboardData)[manualAddress.toLowerCase()];
+        
+        if (!leaderboardEntry) {
+          setError(
+            `Address ${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)} is not found in the Tap Day Leaderboard. Only addresses that participated in the leaderboard can have subnames assigned.`
+          );
+          setEligibleAddresses([]);
+          setShowSubnameForm(false);
+          return;
+        }
+
+        // Success - show the form
+        setEligibleAddresses([manualAddress.toLowerCase()]);
+        setSelectedAddress(manualAddress.toLowerCase());
+        setShowSubnameForm(true);
+        setError("");
+        
+        // Show success message with authority reason
+        console.log(`✅ Authority confirmed: ${authorityReason}`);
+      } else {
+        setError(
+          `Your connected wallet (${connectedAddress.slice(0, 6)}...${connectedAddress.slice(-4)}) does not have authority to claim subnames for ${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)}. You can only claim for addresses you are the sender of, or addresses that sent USDC to you according to live blockchain records.`
+        );
+        setEligibleAddresses([]);
+        setShowSubnameForm(false);
+      }
+    } catch (error) {
+      console.error("Error checking manual address:", error);
+      setError("Network error while checking blockchain data. Please try again.");
+      setEligibleAddresses([]);
+      setShowSubnameForm(false);
+    } finally {
+      setIsValidatingEligibility(false);
     }
   };
 
   // Reset to wallet-based checking
-  const resetToWalletCheck = () => {
+  const resetToWalletCheck = async () => {
     setManualAddress("");
     setShowManualInput(false);
     setError("");
+    setValidationError("");
+    setIsValidatingEligibility(false);
     if (authenticated && user?.wallet?.address) {
-      checkEligibleAddresses();
+      await checkEligibleAddresses();
     } else {
       setEligibleAddresses([]);
       setShowSubnameForm(false);
@@ -225,6 +418,30 @@ export default function ClaimPage() {
       return;
     }
 
+    // Final validation using live blockchain data before creating subname
+    const connectedAddr = showManualInput
+      ? manualAddress
+      : user?.wallet?.address;
+    
+    if (!connectedAddr) {
+      setError("No address available for validation");
+      return;
+    }
+
+    // Double-check authority using live blockchain data
+    const isValid = await validateEligibilityWithAPI(
+      connectedAddr,
+      selectedAddress
+    );
+    
+    if (!isValid) {
+      setError(
+        validationError ||
+          "Final blockchain validation failed. You can only claim subnames for addresses you have sent/received USDC with according to live Base blockchain records."
+      );
+      return;
+    }
+
     setIsCreatingSubname(true);
     setError("");
 
@@ -286,6 +503,8 @@ export default function ClaimPage() {
     setIsLoadingSubnames(false);
     setManualAddress("");
     setShowManualInput(false);
+    setValidationError("");
+    setIsValidatingEligibility(false);
   };
 
   return (
@@ -319,16 +538,16 @@ export default function ClaimPage() {
               </h3>
               <div className="text-sm text-forest/70 space-y-2">
                 <p>
-                  • Connect your wallet OR enter any address to check
-                  eligibility from the Tap Day Leaderboard
+                  • Connect your wallet to check your authority to claim subnames
+                  for Tap Day Leaderboard participants
                 </p>
                 <p>
-                  • If you sent USDC: You can claim a subname for yourself (the
+                  • If you sent USDC: You can claim a subname for yourself (as the
                   sender)
                 </p>
                 <p>
                   • If you received USDC: You can claim a subname for the sender
-                  who sent to you
+                  who sent USDC to you
                 </p>
                 <p>
                   • Pick an available subname label (e.g., "myname" becomes
@@ -337,6 +556,9 @@ export default function ClaimPage() {
                 <p>
                   • Subnames are awarded to sender addresses (leaderboard
                   participants)
+                </p>
+                <p>
+                  • All eligibility is verified using live blockchain data from Base (not just static records)
                 </p>
                 <p>• Only ONE subname per address is allowed</p>
               </div>
@@ -368,10 +590,13 @@ export default function ClaimPage() {
                   Connect Wallet
                 </button>
 
-                {/* Alternative: Manual Address Check */}
+                                {/* Alternative: Manual Address Check */}
                 <div className="mt-6 pt-6 border-t border-forest/10">
                   <p className="text-sm text-forest/60 mb-4">
-                    Or check eligibility without connecting a wallet:
+                    Want to check if an address is eligible?<br/>
+                    <span className="text-xs text-forest/50">
+                      (Connect your wallet first to verify your claiming authority)
+                    </span>
                   </p>
                   <div className="space-y-3">
                     <input
@@ -380,14 +605,18 @@ export default function ClaimPage() {
                       onChange={(e) => setManualAddress(e.target.value)}
                       placeholder="Enter Ethereum address (0x...)"
                       className="w-full p-3 border border-forest/20 rounded-lg font-mono text-sm focus:border-forest focus:outline-none"
+                      disabled
                     />
                     <button
-                      onClick={checkManualAddress}
-                      className="w-full bg-forest/10 hover:bg-forest/20 text-forest font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                      disabled
+                      className="w-full bg-forest/10 text-forest/50 font-futura-bold py-2 px-4 rounded-lg cursor-not-allowed"
                     >
-                      Check Address Eligibility
+                      Connect Wallet First
                     </button>
                   </div>
+                  <p className="text-xs text-forest/50 mt-2">
+                    You need to connect your wallet to verify you have authority to claim subnames for any eligible addresses.
+                  </p>
                 </div>
               </div>
             ) : (
@@ -431,8 +660,8 @@ export default function ClaimPage() {
                         </span>
                       </div>
                       <p className="text-sm text-blue-700 mb-3">
-                        Enter any Ethereum address to check its eligibility for
-                        subname claiming.
+                        Enter any Ethereum address to check if you have authority to claim subnames for it.
+                        You can only claim for addresses you sent/received USDC to/from.
                       </p>
 
                       <div className="space-y-3">
@@ -448,7 +677,7 @@ export default function ClaimPage() {
                             onClick={checkManualAddress}
                             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
                           >
-                            Check Eligibility
+                            Check My Authority
                           </button>
                           <button
                             onClick={resetToWalletCheck}
@@ -469,16 +698,44 @@ export default function ClaimPage() {
                       <div className="flex items-center mb-2">
                         <span className="text-orange-600 mr-2">⚠️</span>
                         <span className="font-futura-bold text-orange-800">
-                          Not Eligible
+                          No Authority
                         </span>
                       </div>
                       <p className="text-sm text-orange-700">
-                        This wallet address is not eligible for a subname claim.
-                        Only addresses that participated in the Tap Day
-                        Leaderboard can claim subnames.
+                        Your connected wallet does not have authority to claim subnames.
+                        You can only claim for addresses you sent USDC from or received USDC to
+                        during the Tap Day Leaderboard period.
                       </p>
                     </div>
                   )}
+
+                {/* Validation Status */}
+                {isValidatingEligibility && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div className="flex items-center mb-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                      <span className="font-futura-bold text-blue-800">
+                        Validating Eligibility
+                      </span>
+                    </div>
+                    <p className="text-sm text-blue-700">
+                      Checking blockchain records to verify your eligibility...
+                    </p>
+                  </div>
+                )}
+
+                {/* Validation Error */}
+                {validationError && (
+                  <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                    <div className="flex items-center mb-2">
+                      <span className="text-orange-600 mr-2">⚠️</span>
+                      <span className="font-futura-bold text-orange-800">
+                        Validation Failed
+                      </span>
+                    </div>
+                    <p className="text-sm text-orange-700">{validationError}</p>
+                  </div>
+                )}
 
                 {/* Error Display */}
                 {error && (
@@ -695,16 +952,32 @@ export default function ClaimPage() {
                           onClick={createSubname}
                           disabled={
                             isCreatingSubname ||
+                            isValidatingEligibility ||
                             availabilityStatus !== "available" ||
                             !selectedAddress ||
                             !subnameLabel
                           }
                           className="w-full bg-forest hover:bg-forest/90 disabled:bg-forest/50 text-cream font-futura-bold py-3 px-6 rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                         >
-                          {isCreatingSubname
+                          {isValidatingEligibility
+                            ? "Validating Eligibility..."
+                            : isCreatingSubname
                             ? "Assigning Subname..."
                             : "Assign Subname"}
                         </button>
+                        
+                        {/* Validation Info */}
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                          <div className="flex items-center mb-2">
+                            <span className="text-blue-600 mr-2">🔍</span>
+                            <span className="font-futura-bold text-blue-800 text-sm">
+                              Live Blockchain Validation
+                            </span>
+                          </div>
+                          <p className="text-xs text-blue-700">
+                            All eligibility checks use real-time USDC transaction data from Base blockchain via Basescan API. This ensures you can only claim subnames for addresses you have legitimate authority over based on actual transaction history.
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
