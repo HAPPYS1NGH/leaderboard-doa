@@ -125,11 +125,50 @@ export default function ClaimPage() {
         }
       }
 
-      setEligibleAddresses(authorizedAddresses);
+      // Filter out addresses that already have subnames
+      const addressesWithoutSubnames: string[] = [];
       
-      if (authorizedAddresses.length > 0 && authorizedAddresses[0]) {
-        setSelectedAddress(authorizedAddresses[0]);
+      for (const address of authorizedAddresses) {
+        try {
+          const response = await fetch('/api/subname/lookup', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ addresses: [address] }),
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
+            const addressResult = result.data.find((item: any) => 
+              item.address.toLowerCase() === address.toLowerCase()
+            );
+            
+            // Only include addresses that don't have an ENS name yet
+            if (!addressResult?.ensName) {
+              addressesWithoutSubnames.push(address);
+            }
+          } else {
+            // If lookup fails, include the address (benefit of doubt)
+            addressesWithoutSubnames.push(address);
+          }
+        } catch (error) {
+          console.warn(`Failed to check existing subname for ${address}:`, error);
+          // If lookup fails, include the address (benefit of doubt)
+          addressesWithoutSubnames.push(address);
+        }
+      }
+
+      setEligibleAddresses(addressesWithoutSubnames);
+      
+      if (addressesWithoutSubnames.length > 0 && addressesWithoutSubnames[0]) {
+        setSelectedAddress(addressesWithoutSubnames[0]);
         setShowSubnameForm(true);
+      } else if (authorizedAddresses.length > 0) {
+        // All authorized addresses already have subnames - this is actually good!
+        setError(""); // Clear any previous errors
+        setShowSubnameForm(false);
+        // Set a special state to show success message
+        setEligibleAddresses(authorizedAddresses); // Keep them to show the success state
       }
     } catch (error) {
       console.error("Error checking eligible addresses:", error);
@@ -299,6 +338,33 @@ export default function ClaimPage() {
           return;
         }
 
+        // Check if this address already has a subname before showing the form
+        try {
+          const response = await fetch('/api/subname/lookup', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ addresses: [manualAddress.toLowerCase()] }),
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
+            const addressResult = result.data.find((item: any) => 
+              item.address.toLowerCase() === manualAddress.toLowerCase()
+            );
+            
+            if (addressResult?.ensName) {
+              // Address already has a subname
+              setError(`Address ${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)} already has a subname: ${addressResult.ensName}. No further action needed!`);
+              setEligibleAddresses([]);
+              setShowSubnameForm(false);
+              return;
+            }
+          }
+        } catch (lookupError) {
+          console.warn('Failed to check existing subname, proceeding anyway:', lookupError);
+        }
+
         // Success - show the form
         setEligibleAddresses([manualAddress.toLowerCase()]);
         setSelectedAddress(manualAddress.toLowerCase());
@@ -345,15 +411,21 @@ export default function ClaimPage() {
 
     setIsLoadingSubnames(true);
     try {
-      const response = await fetch(`/api/subname/lookup?address=${address}`, {
-        method: "GET",
+      const response = await fetch('/api/subname/lookup', {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addresses: [address] }),
       });
 
       const result = await response.json();
 
-      if (response.ok) {
-        setExistingSubnames(result.subnames || []);
+      if (response.ok && result.success) {
+        // Extract ENS names from the result
+        const addressResult = result.data.find((item: any) => 
+          item.address.toLowerCase() === address.toLowerCase()
+        );
+        const existingEnsNames = addressResult?.ensName ? [addressResult.ensName] : [];
+        setExistingSubnames(existingEnsNames);
       } else {
         console.error("Failed to lookup existing subnames:", result.error);
         setExistingSubnames([]);
@@ -413,7 +485,7 @@ export default function ClaimPage() {
 
     if (existingSubnames.length > 0) {
       setError(
-        "This address already has a subname. Only one subname per address is allowed."
+        `This address already has a subname: ${existingSubnames[0]}. Only one subname per address is allowed.`
       );
       return;
     }
@@ -461,8 +533,24 @@ export default function ClaimPage() {
         setSubnameCreated(`${subnameLabel}.deptofagri.eth`);
         setSubnameLabel("");
         setAvailabilityStatus("idle");
+        
+        // Signal other tabs/pages to refresh ENS names
+        if (result.refreshSignal) {
+          localStorage.setItem('ensRefreshNeeded', 'true');
+          // Also trigger a storage event for the current tab
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: 'ensRefreshNeeded',
+            newValue: 'true'
+          }));
+        }
       } else {
-        setError(result.error || "Failed to create subname");
+        // Handle different error types
+        if (response.status === 409 && result.existing) {
+          // Duplicate error with existing subname info
+          setError(`${result.error}: ${result.existing}`);
+        } else {
+          setError(result.error || "Failed to create subname");
+        }
       }
     } catch (error) {
       console.error("Error creating subname:", error);
@@ -693,7 +781,8 @@ export default function ClaimPage() {
 
                 {/* Eligibility Status */}
                 {eligibleAddresses.length === 0 &&
-                  showSubnameForm === false && (
+                  showSubnameForm === false &&
+                  !isValidatingEligibility && (
                     <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
                         <span className="text-orange-600 mr-2">⚠️</span>
@@ -705,6 +794,26 @@ export default function ClaimPage() {
                         Your connected wallet does not have authority to claim subnames.
                         You can only claim for addresses you sent USDC from or received USDC to
                         during the Tap Day Leaderboard period.
+                      </p>
+                    </div>
+                  )}
+
+                {/* All Addresses Already Have Subnames Success State */}
+                {eligibleAddresses.length > 0 &&
+                  showSubnameForm === false &&
+                  !isValidatingEligibility && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-green-600 mr-2">🎉</span>
+                        <span className="font-futura-bold text-green-800">
+                          All Set!
+                        </span>
+                      </div>
+                      <p className="text-sm text-green-700 mb-3">
+                        All eligible addresses already have ENS subnames assigned! No further action needed.
+                      </p>
+                      <p className="text-xs text-green-600">
+                        Your addresses are already displaying with their custom names on the leaderboard.
                       </p>
                     </div>
                   )}
@@ -862,22 +971,28 @@ export default function ClaimPage() {
                           </div>
                         ) : existingSubnames.length > 0 ? (
                           <div className="space-y-2">
-                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                              <p className="text-sm text-orange-700 mb-2">
-                                This address already has a subname:
+                            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                              <div className="flex items-center mb-2">
+                                <span className="text-green-600 mr-2">🎉</span>
+                                <span className="font-futura-bold text-green-800">
+                                  Address Already Has Subname!
+                                </span>
+                              </div>
+                              <p className="text-sm text-green-700 mb-3">
+                                This address already has an ENS subname assigned:
                               </p>
                               <div className="space-y-1">
                                 {existingSubnames.map((subname, index) => (
                                   <div
                                     key={index}
-                                    className="text-sm font-mono bg-orange-100 p-2 rounded text-orange-800"
+                                    className="text-sm font-mono bg-green-100 p-3 rounded text-green-800 border border-green-300"
                                   >
-                                    {subname}
+                                    ✅ {subname}
                                   </div>
                                 ))}
                               </div>
-                              <p className="text-xs text-orange-600 mt-2">
-                                Only one subname per address is allowed.
+                              <p className="text-xs text-green-600 mt-3">
+                                ✨ This address is all set! The subname is already linked and will appear on the leaderboard.
                               </p>
                             </div>
                           </div>

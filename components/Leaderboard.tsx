@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import leaderboardData from "../constants/usdc_transfer_leaderboard.json";
 
 interface LeaderboardEntry {
@@ -9,6 +9,11 @@ interface LeaderboardEntry {
   originalRank: number;
 }
 
+interface EnsLookupResult {
+  address: string;
+  ensName?: string;
+}
+
 interface LeaderboardProps {
   maxEntries?: number;
 }
@@ -16,6 +21,100 @@ interface LeaderboardProps {
 const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   const [sortBy, setSortBy] = useState<"amount" | "transactions">("amount");
   const [searchQuery, setSearchQuery] = useState("");
+  const [ensNames, setEnsNames] = useState<Map<string, string>>(new Map());
+  const [ensLoading, setEnsLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
+
+  // Fetch ENS names for all addresses
+  const fetchEnsNames = async (showLoading = true) => {
+    try {
+      if (showLoading) setEnsLoading(true);
+      const addresses = Object.keys(leaderboardData);
+      
+      const response = await fetch('/api/subname/lookup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addresses }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const ensMap = new Map<string, string>();
+        
+        result.data.forEach((item: EnsLookupResult) => {
+          if (item.ensName) {
+            const normalizedAddress = item.address.toLowerCase().trim();
+            ensMap.set(normalizedAddress, item.ensName);
+          }
+        });
+        
+        setEnsNames(ensMap);
+        setLastRefresh(Date.now());
+      } else {
+        console.error('Failed to fetch ENS names:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching ENS names:', error);
+    } finally {
+      if (showLoading) setEnsLoading(false);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchEnsNames();
+  }, []);
+
+  // Periodic refresh every 2 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchEnsNames(false); // Don't show loading for background refreshes
+    }, 120000); // 2 minutes
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Refresh when page becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // Refresh if it's been more than 10 seconds since last refresh (reduced from 30s)
+        if (Date.now() - lastRefresh > 10000) {
+          fetchEnsNames(false);
+        }
+      }
+    };
+
+    // Also listen for focus events (when user clicks back to tab)
+    const handleFocus = () => {
+      if (Date.now() - lastRefresh > 5000) { // 5 seconds for focus events
+        fetchEnsNames(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [lastRefresh]);
+
+  // Check localStorage for refresh signals (from other tabs/pages)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'ensRefreshNeeded' && e.newValue === 'true') {
+        fetchEnsNames(false);
+        localStorage.removeItem('ensRefreshNeeded'); // Clear the signal
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const sortedData = useMemo(() => {
     // First, create entries with original ranking
@@ -33,11 +132,16 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
         originalRank: index + 1,
       }));
 
-    // Filter by search query
+    // Filter by search query (search both wallet address and ENS name)
     const filteredEntries = searchQuery
-      ? allEntries.filter((entry) =>
-          entry.wallet.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      ? allEntries.filter((entry) => {
+          const searchTerm = searchQuery.toLowerCase().trim();
+          const walletMatch = entry.wallet.toLowerCase().includes(searchTerm);
+          const normalizedWallet = entry.wallet.toLowerCase().trim();
+          const ensName = ensNames.get(normalizedWallet);
+          const ensMatch = ensName ? ensName.toLowerCase().includes(searchTerm) : false;
+          return walletMatch || ensMatch;
+        })
       : allEntries;
 
     // Sort filtered entries by the current sort criteria
@@ -50,9 +154,14 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
         }
       })
       .slice(0, maxEntries);
-  }, [sortBy, maxEntries, searchQuery]);
+  }, [sortBy, maxEntries, searchQuery, ensNames]);
 
   const formatWallet = (wallet: string) => {
+    const normalizedWallet = wallet.toLowerCase().trim();
+    const ensName = ensNames.get(normalizedWallet);
+    if (ensName) {
+      return ensName;
+    }
     return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
   };
 
@@ -82,6 +191,23 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           <p className="text-lg md:text-xl text-forest/80 max-w-3xl mx-auto px-4 mb-6">
             Who's been sipping the yield the fastest? Find out here.
           </p>
+          {ensLoading && (
+            <p className="text-sm text-forest/60 mb-4">
+              Loading ENS names...
+            </p>
+          )}
+          <div className="flex justify-center items-center gap-4 mb-4">
+            <button
+              onClick={() => fetchEnsNames(true)}
+              disabled={ensLoading}
+              className="px-4 py-2 bg-forest text-cream rounded-lg hover:bg-forest/80 disabled:opacity-50 disabled:cursor-not-allowed font-futura-bold text-sm transition-colors"
+            >
+              {ensLoading ? 'Refreshing...' : 'Refresh ENS Names'}
+            </button>
+            <p className="text-xs text-forest/60">
+              Last updated: {new Date(lastRefresh).toLocaleTimeString()}
+            </p>
+          </div>
         </div>
         {/* Search Box */}
         <div className="flex justify-center mb-8">
@@ -103,7 +229,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
             </div>
             <input
               type="text"
-              placeholder="Search by wallet address..."
+              placeholder="Search by wallet address or ENS name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="block w-full pl-10 pr-3 py-3 border border-forest/20 rounded-lg bg-white/70 backdrop-blur-sm text-forest placeholder-forest/40 focus:outline-none focus:ring-2 focus:ring-forest/50 focus:border-forest/50 font-futura-bold"
