@@ -565,6 +565,7 @@ export default function ClaimPage() {
     if (authenticated && user?.wallet?.address) {
       checkEligibleAddresses();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated, user?.wallet?.address]);
 
   // Check existing subnames when selected address changes
@@ -609,62 +610,41 @@ export default function ClaimPage() {
       <Navigation />
 
       <div className="min-h-screen bg-gradient-to-br from-forest/5 to-cream/30">
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-futura-bold text-forest mb-4">
-              🏆 Assign Leaderboard Subnames
+        <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-futura-bold text-forest mb-3">
+              🏆 Claim Your Subname
             </h1>
-            <p className="text-lg text-forest/70 max-w-2xl mx-auto">
-              Connect your wallet to assign a custom deptofagri.eth subname to
-              eligible sender addresses from the Tap Day Leaderboard.
+            <p className="text-base md:text-lg text-forest/70 max-w-2xl mx-auto mb-6">
+              Get your custom deptofagri.eth name from the Tap Day Leaderboard
             </p>
 
-            {/* How it works explanation */}
-            <div className="mt-8 bg-forest/5 rounded-xl p-6 max-w-3xl mx-auto">
-              <h3 className="text-lg font-futura-bold text-forest mb-3">
-                How It Works
+            {/* Quick guide */}
+            <div className="bg-forest/5 rounded-xl p-4 md:p-6 max-w-2xl mx-auto">
+              <h3 className="text-base md:text-lg font-futura-bold text-forest mb-3">
+                Quick Guide
               </h3>
-              <div className="text-sm text-forest/70 space-y-2">
-                <p>
-                  • Connect your wallet to check your authority to claim subnames
-                  for Tap Day Leaderboard participants
-                </p>
-                <p>
-                  • If you sent USDC: You can claim a subname for yourself (as the
-                  sender)
-                </p>
-                <p>
-                  • If you received USDC: You can claim a subname for the sender
-                  who sent USDC to you
-                </p>
-                <p>
-                  • Pick an available subname label (e.g., "myname" becomes
-                  "myname.deptofagri.eth")
-                </p>
-                <p>
-                  • Subnames are awarded to sender addresses (leaderboard
-                  participants)
-                </p>
-                <p>
-                  • All eligibility is verified using live blockchain data from Base (not just static records)
-                </p>
-                <p>• Only ONE subname per address is allowed</p>
+              <div className="text-xs md:text-sm text-forest/70 space-y-1.5">
+                <p>• Connect wallet → Check eligibility</p>
+                <p>• Send USDC to the connected address from hat account</p>
+                <p>• Pick name → Get .deptofagri.eth</p>
+                <p>• One subname per Hat</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-forest/10 p-8 max-w-2xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-forest/10 p-6 md:p-8 max-w-2xl mx-auto">
             {!authenticated ? (
               <div className="text-center">
                 <div className="mb-6">
-                  <div className="w-24 h-24 bg-forest/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">🔐</span>
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-forest/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl md:text-3xl">🔐</span>
                   </div>
-                  <h2 className="text-2xl font-futura-bold text-forest mb-2">
-                    Connect Your Wallet
+                  <h2 className="text-xl md:text-2xl font-futura-bold text-forest mb-2">
+                    Connect Wallet
                   </h2>
-                  <p className="text-forest/60">
-                    Sign in with your wallet to access your rewards
+                  <p className="text-sm md:text-base text-forest/60">
+                    Sign in to claim your subname
                   </p>
                 </div>
 
@@ -678,12 +658,12 @@ export default function ClaimPage() {
                   Connect Wallet
                 </button>
 
-                                {/* Alternative: Manual Address Check */}
+                {/* Alternative: Manual Address Check */}
                 <div className="mt-6 pt-6 border-t border-forest/10">
-                  <p className="text-sm text-forest/60 mb-4">
-                    Want to check if an address is eligible?<br/>
+                  <p className="text-xs md:text-sm text-forest/60 mb-3">
+                    Check different address?<br/>
                     <span className="text-xs text-forest/50">
-                      (Connect your wallet first to verify your claiming authority)
+                      (Connect wallet first)
                     </span>
                   </p>
                   <div className="space-y-3">
@@ -691,19 +671,19 @@ export default function ClaimPage() {
                       type="text"
                       value={manualAddress}
                       onChange={(e) => setManualAddress(e.target.value)}
-                      placeholder="Enter Ethereum address (0x...)"
+                      placeholder="0x..."
                       className="w-full p-3 border border-forest/20 rounded-lg font-mono text-sm focus:border-forest focus:outline-none"
                       disabled
                     />
                     <button
                       disabled
-                      className="w-full bg-forest/10 text-forest/50 font-futura-bold py-2 px-4 rounded-lg cursor-not-allowed"
+                      className="w-full bg-forest/10 text-forest/50 font-futura-bold py-2 px-4 rounded-lg cursor-not-allowed text-sm"
                     >
                       Connect Wallet First
                     </button>
                   </div>
                   <p className="text-xs text-forest/50 mt-2">
-                    You need to connect your wallet to verify you have authority to claim subnames for any eligible addresses.
+                    Connect wallet to verify authority
                   </p>
                 </div>
               </div>
@@ -713,26 +693,23 @@ export default function ClaimPage() {
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl">✅</span>
                   </div>
-                  <h2 className="text-2xl font-futura-bold text-forest mb-2">
-                    Wallet Connected
+                  <h2 className="text-xl md:text-2xl font-futura-bold text-forest mb-2">
+                    Connected
                   </h2>
-                  <p className="text-sm text-forest/60 font-mono bg-forest/5 p-2 rounded-lg">
-                    {user?.wallet?.address?.slice(0, 6)}...
-                    {user?.wallet?.address?.slice(-4)}
+                  <p className="text-xs md:text-sm text-forest/60 font-mono bg-forest/5 p-2 rounded-lg">
+                    {user?.wallet?.address?.slice(0, 6)}...{user?.wallet?.address?.slice(-4)}
                   </p>
                   <p className="text-xs text-forest/40 mt-1">
-                    Chain: {user?.wallet?.chainType || "Unknown"}
+                    {user?.wallet?.chainType || "Unknown"}
                   </p>
 
                   {/* Manual Address Option Toggle */}
                   <div className="mt-4">
                     <button
                       onClick={() => setShowManualInput(!showManualInput)}
-                      className="text-sm text-forest hover:text-forest/80 underline"
+                      className="text-xs md:text-sm text-forest hover:text-forest/80 underline"
                     >
-                      {showManualInput
-                        ? "Use connected wallet"
-                        : "Check different address instead"}
+                      {showManualInput ? "Use wallet" : "Check other address"}
                     </button>
                   </div>
                 </div>
@@ -743,13 +720,12 @@ export default function ClaimPage() {
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
                         <span className="text-blue-600 mr-2">🔍</span>
-                        <span className="font-futura-bold text-blue-800">
-                          Check Any Address
+                        <span className="font-futura-bold text-blue-800 text-sm">
+                          Check Address
                         </span>
                       </div>
-                      <p className="text-sm text-blue-700 mb-3">
-                        Enter any Ethereum address to check if you have authority to claim subnames for it.
-                        You can only claim for addresses you sent/received USDC to/from.
+                      <p className="text-xs md:text-sm text-blue-700 mb-3">
+                        Enter address to check authority. Only claim for addresses you sent your USDC to.
                       </p>
 
                       <div className="space-y-3">
@@ -763,13 +739,13 @@ export default function ClaimPage() {
                         <div className="flex space-x-2">
                           <button
                             onClick={checkManualAddress}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-futura-bold py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
                           >
-                            Check My Authority
+                            Check Authority
                           </button>
                           <button
                             onClick={resetToWalletCheck}
-                            className="px-4 py-2 text-blue-600 hover:text-blue-800 font-futura-bold"
+                            className="px-4 py-2 text-blue-600 hover:text-blue-800 font-futura-bold text-sm"
                           >
                             Reset
                           </button>
@@ -786,14 +762,12 @@ export default function ClaimPage() {
                     <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
                         <span className="text-orange-600 mr-2">⚠️</span>
-                        <span className="font-futura-bold text-orange-800">
+                        <span className="font-futura-bold text-orange-800 text-sm">
                           No Authority
                         </span>
                       </div>
-                      <p className="text-sm text-orange-700">
-                        Your connected wallet does not have authority to claim subnames.
-                        You can only claim for addresses you sent USDC from or received USDC to
-                        during the Tap Day Leaderboard period.
+                      <p className="text-xs md:text-sm text-orange-700">
+                        No authority to claim subnames. Only for addresses you sent your USDC to.
                       </p>
                     </div>
                   )}
@@ -805,15 +779,15 @@ export default function ClaimPage() {
                     <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
                         <span className="text-green-600 mr-2">🎉</span>
-                        <span className="font-futura-bold text-green-800">
+                        <span className="font-futura-bold text-green-800 text-sm">
                           All Set!
                         </span>
                       </div>
-                      <p className="text-sm text-green-700 mb-3">
-                        All eligible addresses already have ENS subnames assigned! No further action needed.
+                      <p className="text-xs md:text-sm text-green-700 mb-2">
+                        All addresses already have subnames! No action needed.
                       </p>
                       <p className="text-xs text-green-600">
-                        Your addresses are already displaying with their custom names on the leaderboard.
+                        Names are already on the leaderboard.
                       </p>
                     </div>
                   )}
@@ -823,12 +797,12 @@ export default function ClaimPage() {
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                     <div className="flex items-center mb-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                      <span className="font-futura-bold text-blue-800">
-                        Validating Eligibility
+                      <span className="font-futura-bold text-blue-800 text-sm">
+                        Validating
                       </span>
                     </div>
-                    <p className="text-sm text-blue-700">
-                      Checking blockchain records to verify your eligibility...
+                    <p className="text-xs md:text-sm text-blue-700">
+                      Checking blockchain records...
                     </p>
                   </div>
                 )}
@@ -838,11 +812,11 @@ export default function ClaimPage() {
                   <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
                     <div className="flex items-center mb-2">
                       <span className="text-orange-600 mr-2">⚠️</span>
-                      <span className="font-futura-bold text-orange-800">
+                      <span className="font-futura-bold text-orange-800 text-sm">
                         Validation Failed
                       </span>
                     </div>
-                    <p className="text-sm text-orange-700">{validationError}</p>
+                    <p className="text-xs md:text-sm text-orange-700">{validationError}</p>
                   </div>
                 )}
 
@@ -851,11 +825,11 @@ export default function ClaimPage() {
                   <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                     <div className="flex items-center mb-2">
                       <span className="text-red-600 mr-2">❌</span>
-                      <span className="font-futura-bold text-red-800">
+                      <span className="font-futura-bold text-red-800 text-sm">
                         Error
                       </span>
                     </div>
-                    <p className="text-sm text-red-700">{error}</p>
+                    <p className="text-xs md:text-sm text-red-700">{error}</p>
                   </div>
                 )}
 
@@ -864,13 +838,12 @@ export default function ClaimPage() {
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                     <div className="flex items-center mb-2">
                       <span className="text-green-600 mr-2">🎉</span>
-                      <span className="font-futura-bold text-green-800">
-                        Subname Created Successfully!
+                      <span className="font-futura-bold text-green-800 text-sm">
+                        Success!
                       </span>
                     </div>
-                    <p className="text-sm text-green-700">
-                      Your subname <strong>{subnameCreated}</strong> has been
-                      created and linked to the selected sender address.
+                    <p className="text-xs md:text-sm text-green-700">
+                      <strong>{subnameCreated}</strong> created and linked.
                     </p>
                   </div>
                 )}
@@ -881,29 +854,24 @@ export default function ClaimPage() {
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                       <div className="flex items-center mb-2">
                         <span className="text-blue-600 mr-2">✅</span>
-                        <span className="font-futura-bold text-blue-800">
-                          Eligible for Subname!
+                        <span className="font-futura-bold text-blue-800 text-sm">
+                          Eligible!
                         </span>
                       </div>
-                      <p className="text-sm text-blue-700">
-                        Found {eligibleAddresses.length} sender address
-                        {eligibleAddresses.length > 1 ? "es" : ""} eligible for
-                        subname assignment:
+                      <p className="text-xs md:text-sm text-blue-700">
+                        {eligibleAddresses.length} address{eligibleAddresses.length > 1 ? "es" : ""} eligible
                       </p>
                       <div className="mt-2 text-xs text-blue-600">
                         {showManualInput
-                          ? `Authority from: ${manualAddress.slice(
-                              0,
-                              6
-                            )}...${manualAddress.slice(-4)}`
-                          : "Authority from your connected wallet and Tap Day Leaderboard participation"}
+                          ? `From: ${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)}`
+                          : "From your wallet & leaderboard participation"}
                       </div>
                     </div>
 
                     {/* Address Selection */}
                     <div className="space-y-2">
-                      <label className="block text-sm font-futura-bold text-forest">
-                        Select Sender Address to Assign Subname To:
+                      <label className="block text-xs md:text-sm font-futura-bold text-forest">
+                        Select Address:
                       </label>
                       <select
                         value={selectedAddress}
@@ -961,8 +929,8 @@ export default function ClaimPage() {
                     {/* Existing Subnames Display */}
                     {selectedAddress && (
                       <div className="space-y-2">
-                        <label className="block text-sm font-futura-bold text-forest">
-                          Existing Subnames for this Sender Address:
+                        <label className="block text-xs md:text-sm font-futura-bold text-forest">
+                          Existing Subnames:
                         </label>
                         {isLoadingSubnames ? (
                           <div className="flex items-center space-x-2 text-sm text-forest/60">
@@ -974,12 +942,12 @@ export default function ClaimPage() {
                             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                               <div className="flex items-center mb-2">
                                 <span className="text-green-600 mr-2">🎉</span>
-                                <span className="font-futura-bold text-green-800">
-                                  Address Already Has Subname!
+                                <span className="font-futura-bold text-green-800 text-sm">
+                                  Already Has Subname!
                                 </span>
                               </div>
-                              <p className="text-sm text-green-700 mb-3">
-                                This address already has an ENS subname assigned:
+                              <p className="text-xs md:text-sm text-green-700 mb-3">
+                                Address already has ENS subname:
                               </p>
                               <div className="space-y-1">
                                 {existingSubnames.map((subname, index) => (
@@ -992,14 +960,14 @@ export default function ClaimPage() {
                                 ))}
                               </div>
                               <p className="text-xs text-green-600 mt-3">
-                                ✨ This address is all set! The subname is already linked and will appear on the leaderboard.
+                                ✨ All set! Subname is linked and on leaderboard.
                               </p>
                             </div>
                           </div>
                         ) : (
                           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                            <p className="text-sm text-gray-600">
-                              No existing subnames found for this address.
+                            <p className="text-xs md:text-sm text-gray-600">
+                              No existing subnames found.
                             </p>
                           </div>
                         )}
@@ -1009,8 +977,8 @@ export default function ClaimPage() {
                     {/* Subname Label Input */}
                     {existingSubnames.length === 0 && (
                       <div className="space-y-2">
-                        <label className="block text-sm font-futura-bold text-forest">
-                          Choose Your Subname:
+                        <label className="block text-xs md:text-sm font-futura-bold text-forest">
+                          Choose Subname:
                         </label>
                         <div className="relative">
                           <input
@@ -1081,18 +1049,6 @@ export default function ClaimPage() {
                             : "Assign Subname"}
                         </button>
                         
-                        {/* Validation Info */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
-                          <div className="flex items-center mb-2">
-                            <span className="text-blue-600 mr-2">🔍</span>
-                            <span className="font-futura-bold text-blue-800 text-sm">
-                              Live Blockchain Validation
-                            </span>
-                          </div>
-                          <p className="text-xs text-blue-700">
-                            All eligibility checks use real-time USDC transaction data from Base blockchain via Basescan API. This ensures you can only claim subnames for addresses you have legitimate authority over based on actual transaction history.
-                          </p>
-                        </div>
                       </div>
                     )}
                   </div>
@@ -1109,9 +1065,8 @@ export default function ClaimPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-forest/50">
-              By connecting your wallet and claiming a subname, you agree to our
-              terms of service.
+            <p className="text-xs text-forest/50">
+              By connecting wallet and claiming subname, you agree to terms of service.
             </p>
           </div>
         </div>

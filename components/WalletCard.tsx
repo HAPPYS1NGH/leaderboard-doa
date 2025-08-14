@@ -77,7 +77,7 @@ export default function WalletCard({ wallet }: WalletCardProps) {
     } finally {
       setIsClientSigning(false);
     }
-  }, [wallet, signMessage]);
+  }, [wallet.address, signMessage]);
 
   const handleRemoteSign = useCallback(async () => {
     setIsRemoteSigning(true);

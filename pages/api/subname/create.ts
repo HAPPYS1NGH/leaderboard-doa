@@ -76,7 +76,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             label: normalizedLabel,
             parentName: "deptofagri.eth",
             addresses: [{ chain: ChainName.Ethereum, value: normalizedAddress }],
-            metadata: [{ key: "sender", value: normalizedAddress }]
+            metadata: [{ key: "sender", value: normalizedAddress }],
+            owner: normalizedAddress
         });
 
         // Trigger cache refresh for leaderboard
