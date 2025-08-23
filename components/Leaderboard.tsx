@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import leaderboardData from "../constants/usdc_transfer_leaderboard.json";
 import { useEnsNames } from "../hooks/useEnsNames";
+import { useEnsAvatars } from "../hooks/useEnsAvatars";
 import { useLeaderboardData, SortBy } from "../hooks/useLeaderboardData";
 import { Header } from "./leaderboard/Header";
 import { SearchBox } from "./leaderboard/SearchBox";
@@ -19,6 +20,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   // Prepare address list once
   const allAddresses = useMemo(() => Object.keys(leaderboardData), []);
   const { ensNames, ensLoading, lastRefresh } = useEnsNames(allAddresses);
+  const { ensAvatars, ensAvatarLoading } = useEnsAvatars(allAddresses);
 
   const { entries, totalUsdcClaimed, totalTaps, totalFarmers, formatWallet, formatUsdc, calculateCapProgress } =
     useLeaderboardData(leaderboardData, sortBy, searchQuery, maxEntries, ensNames);
@@ -26,7 +28,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   return (
     <div className="min-h-screen bg-cream py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <Header ensLoading={ensLoading} lastRefresh={lastRefresh} onRefresh={() => {}} />
+        <Header ensLoading={ensLoading || ensAvatarLoading} lastRefresh={lastRefresh} onRefresh={() => {}} />
         <SearchBox value={searchQuery} onChange={setSearchQuery} resultsCount={entries.length} />
         <SortControls sortBy={sortBy} onChange={setSortBy} />
         <Table
@@ -34,12 +36,14 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           formatUsdc={formatUsdc}
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
+          ensAvatars={ensAvatars}
         />
         <MobileCards
           entries={entries}
           formatUsdc={formatUsdc}
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
+          ensAvatars={ensAvatars}
         />
         {/* Leaderboard Stats */}
         <div className="mt-8 mb-6">

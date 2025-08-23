@@ -6,9 +6,66 @@ type TableProps = {
   formatUsdc: (amount: string) => string;
   calculateCapProgress: (amount: string) => number;
   formatWallet: (wallet: string) => string;
+  ensAvatars: Map<string, string>;
 };
 
-export const Table: React.FC<TableProps> = ({ entries, formatUsdc, calculateCapProgress, formatWallet }) => {
+export const Table: React.FC<TableProps> = ({ entries, formatUsdc, calculateCapProgress, formatWallet, ensAvatars }) => {
+  const getWalletDisplay = (entry: LeaderboardEntry) => {
+    const displayName = formatWallet(entry.wallet);
+    const isEns = displayName.includes('.eth');
+    
+    if (isEns) {
+      return (
+        <a 
+          href={`https://app.ens.domains/${displayName}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-sm text-forest font-futura-bold hover:text-forest/70 transition-colors duration-150 underline"
+        >
+          {displayName}
+        </a>
+      );
+    }
+    
+    return (
+      <a 
+        href={`https://etherscan.io/address/${entry.wallet}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-mono text-sm text-forest font-futura-bold hover:text-forest/70 transition-colors duration-150 underline"
+      >
+        {displayName}
+      </a>
+    );
+  };
+
+  const getAvatar = (entry: LeaderboardEntry) => {
+    const normalizedAddress = entry.wallet.toLowerCase().trim();
+    const avatar = ensAvatars.get(normalizedAddress);
+    
+    if (avatar) {
+      return (
+        <img 
+          src={avatar} 
+          alt="avatar" 
+          className="w-10 h-10 rounded-full object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if avatar fails to load
+            e.currentTarget.src = "/images/avatar-placeholder.svg";
+          }}
+        />
+      );
+    }
+    
+    return (
+      <img 
+        src="/images/avatar-placeholder.svg" 
+        alt="avatar" 
+        className="w-10 h-10 rounded-full" 
+      />
+    );
+  };
+
   return (
     <div className="hidden md:block bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
       {/* Leaderboard Header */}
@@ -42,10 +99,10 @@ export const Table: React.FC<TableProps> = ({ entries, formatUsdc, calculateCapP
                 <td className="px-6 py-4">
                   <div className="flex items-center">
                     <div className="w-10 h-10 mr-3">
-                      <img src="/images/avatar-placeholder.svg" alt="avatar" className="w-10 h-10 rounded-full" />
+                      {getAvatar(entry)}
                     </div>
                     <div>
-                      <div className="font-mono text-sm text-forest font-futura-bold">{formatWallet(entry.wallet)}</div>
+                      {getWalletDisplay(entry)}
                     </div>
                   </div>
                 </td>

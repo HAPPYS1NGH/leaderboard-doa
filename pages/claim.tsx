@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { usePrivy, useLogin } from "@privy-io/react-auth";
 import { PrivyClient } from "@privy-io/server-auth";
 import { GetServerSideProps } from "next";
 import Navigation from "../components/Navigation";
 import leaderboardData from "../constants/usdc_transfer_leaderboard.json";
-import clientSideClient from "../lib/namespace-client";
+ 
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const cookieAuthToken = req.cookies["privy-token"];
@@ -57,6 +57,8 @@ export default function ClaimPage() {
   const [availabilityStatus, setAvailabilityStatus] = useState<
     "checking" | "available" | "unavailable" | "idle"
   >("idle");
+  const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
+  const latestLabelRef = useRef<string>("");
   const [isCreatingSubname, setIsCreatingSubname] = useState(false);
   const [subnameCreated, setSubnameCreated] = useState<string>("");
   const [eligibleAddresses, setEligibleAddresses] = useState<string[]>([]);
@@ -442,15 +444,30 @@ export default function ClaimPage() {
   const checkAvailability = async (label: string) => {
     if (!label || label.length < 3) {
       setAvailabilityStatus("idle");
+      setAvailabilityMessage("");
       return;
     }
 
     setAvailabilityStatus("checking");
+    setAvailabilityMessage("");
 
     try {
-      const fullName = `${label}.deptofagri.eth`;
-      const isAvailable = await clientSideClient.isSubnameAvailable(fullName);
-      setAvailabilityStatus(isAvailable ? "available" : "unavailable");
+      // Ignore if label has changed since this request was scheduled
+      if (label !== latestLabelRef.current) return;
+      const resp = await fetch(`/api/subname/availability?label=${encodeURIComponent(label)}`);
+      const data = await resp.json();
+      if (resp.ok && data?.success) {
+        if (data.available) {
+          setAvailabilityStatus("available");
+          setAvailabilityMessage("");
+        } else {
+          setAvailabilityStatus("unavailable");
+          setAvailabilityMessage(data.message || "");
+        }
+      } else {
+        setError(data?.error || "Failed to check availability");
+        setAvailabilityStatus("idle");
+      }
     } catch (error) {
       console.error("Error checking availability:", error);
       setError("Failed to check availability");
@@ -460,16 +477,28 @@ export default function ClaimPage() {
 
   // Handle subname label change with debounced availability check
   const handleLabelChange = (value: string) => {
-    setSubnameLabel(value);
+    const normalized = value.toLowerCase().replace(/[^a-z0-9]/g, "");
+    latestLabelRef.current = normalized;
+    setSubnameLabel(normalized);
     setError("");
-
-    // Debounce availability check
-    const timeoutId = setTimeout(() => {
-      checkAvailability(value);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
+    setAvailabilityMessage("");
   };
+
+  // Debounce availability calls based on current label
+  useEffect(() => {
+    if (!subnameLabel || subnameLabel.length < 3) {
+      setAvailabilityStatus("idle");
+      setAvailabilityMessage("");
+      return;
+    }
+
+    setAvailabilityStatus("checking");
+    const id = setTimeout(() => {
+      checkAvailability(subnameLabel);
+    }, 500);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subnameLabel]);
 
   // Create subname
   const createSubname = async () => {
@@ -516,6 +545,7 @@ export default function ClaimPage() {
 
     setIsCreatingSubname(true);
     setError("");
+    setSubnameCreated("");
 
     try {
       const response = await fetch("/api/subname/create", {
@@ -530,7 +560,10 @@ export default function ClaimPage() {
       const result = await response.json();
 
       if (response.ok) {
-        setSubnameCreated(`${subnameLabel}.deptofagri.eth`);
+        setSubnameCreated(
+          (result?.data && (result.data.fullName || result.data.name)) ||
+            `${subnameLabel}.deptofagri.eth`
+        );
         setSubnameLabel("");
         setAvailabilityStatus("idle");
         
@@ -544,6 +577,7 @@ export default function ClaimPage() {
           }));
         }
       } else {
+        setSubnameCreated("");
         // Handle different error types
         if (response.status === 409 && result.existing) {
           // Duplicate error with existing subname info
@@ -555,6 +589,7 @@ export default function ClaimPage() {
     } catch (error) {
       console.error("Error creating subname:", error);
       setError("Failed to create subname");
+      setSubnameCreated("");
     } finally {
       setIsCreatingSubname(false);
     }
@@ -984,13 +1019,7 @@ export default function ClaimPage() {
                           <input
                             type="text"
                             value={subnameLabel}
-                            onChange={(e) => {
-                              const value = e.target.value
-                                .toLowerCase()
-                                .replace(/[^a-z0-9]/g, "");
-                              setSubnameLabel(value);
-                              handleLabelChange(value);
-                            }}
+                            onChange={(e) => handleLabelChange(e.target.value)}
                             placeholder="Enter label (e.g., myname)"
                             className="w-full p-3 border border-forest/20 rounded-lg focus:border-forest focus:outline-none pr-32"
                             maxLength={63}
@@ -1025,6 +1054,9 @@ export default function ClaimPage() {
                                 <span className="text-red-700 font-futura-bold">
                                   Not available
                                 </span>
+                                {availabilityMessage && (
+                                  <span className="text-red-700"> — {availabilityMessage}</span>
+                                )}
                               </>
                             )}
                           </div>

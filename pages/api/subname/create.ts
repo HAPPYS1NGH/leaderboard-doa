@@ -2,6 +2,37 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ChainName } from "@thenamespace/offchain-manager";
 import client from "../../../lib/namespace";
 
+// Helper function to check Farcaster fname availability
+async function checkFarcasterNameAvailability(fname: string): Promise<boolean> {
+
+    // Then check Neynar API if available
+    if (process.env.NEYNAR_API_KEY) {
+        try {
+            const response = await fetch(`https://api.neynar.com/v2/farcaster/fname/availability/?fname=${fname}`, {
+                method: 'GET',
+                headers: {
+                    'x-api-key': process.env.NEYNAR_API_KEY,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return data.available; // Return true if available, false if taken
+            } else {
+                console.warn('Failed to check Farcaster fname availability:', response.status);
+                // If API fails, assume it's available (don't block)
+                return true;
+            }
+        } catch (error) {
+            console.warn('Error checking Farcaster fname availability:', error);
+            // If API fails, assume it's available (don't block)
+            return true;
+        }
+    }
+    return true;
+}
+
 // Define the request body type
 interface CreateSubnameRequest {
     label: string;
@@ -34,6 +65,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!/^[a-z0-9]{3,63}$/.test(normalizedLabel)) {
             return res.status(400).json({
                 error: 'Label must be 3-63 characters long and contain only lowercase letters and numbers'
+            });
+        }
+
+        // Precheck: Prevent claiming subnames from 1-100 and any Farcaster names
+        const numericLabel = parseInt(normalizedLabel, 10);
+        if (!isNaN(numericLabel) && numericLabel >= 1 && numericLabel <= 100) {
+            return res.status(400).json({
+                error: 'Subnames 1-100 are reserved and cannot be claimed'
+            });
+        }
+
+        // Check for Farcaster fname availability
+        const isFarcasterNameReserved = await checkFarcasterNameAvailability(normalizedLabel);
+        if (!isFarcasterNameReserved) {
+            return res.status(400).json({
+                error: 'This subname is already taken on Farcaster and cannot be claimed'
             });
         }
 
