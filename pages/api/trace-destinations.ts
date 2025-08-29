@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
 // Configuration
-const API_URL = "https://api.basescan.org/api";
+const API_URL = "https://api.etherscan.io/v2/api?chainid=8453";
 const API_KEY = process.env.BASESCAN_API_KEY;
 const USDC_CONTRACT = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC contract on Base
 
