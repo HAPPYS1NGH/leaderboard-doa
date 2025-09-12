@@ -13,7 +13,7 @@ interface LeaderboardProps {
   maxEntries?: number;
 }
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries }) => {
   const [sortBy, setSortBy] = useState<SortBy>("amount");
   const [searchQuery, setSearchQuery] = useState("");
 

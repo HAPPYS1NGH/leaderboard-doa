@@ -22,7 +22,7 @@ export function useLeaderboardData(
   data: LeaderboardJson,
   sortBy: SortBy,
   searchQuery: string,
-  maxEntries: number,
+  maxEntries: number | undefined,
   ensNames: Map<string, string>
 ) {
   const allEntries = useMemo<LeaderboardEntry[]>(() => {
@@ -56,7 +56,7 @@ export function useLeaderboardData(
       return b.transactionCount - a.transactionCount;
     });
 
-    return sorted.slice(0, maxEntries);
+    return maxEntries ? sorted.slice(0, maxEntries) : sorted;
   }, [allEntries, sortBy, maxEntries, searchQuery, ensNames]);
 
   const totalUsdcClaimed = useMemo(() => {
