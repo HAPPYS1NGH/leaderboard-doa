@@ -3,31 +3,51 @@
     "totalUsdcSent": "112.281261",
     "transactionCount": 16,
     "destinationAddresses": [
+      "0x31daa1fc9360d0ca20bcbc0cde3311500b33f8b3",
       "0xb840b8949ecba163e4a18a44dee5d05e485db13a"
     ]
   },
   "0x0173d80405c49a356dac26ed62fd650838cab7ac": {
-    "totalUsdcSent": "107.021856",
-    "transactionCount": 15,
+    "totalUsdcSent": "111.571421",
+    "transactionCount": 16,
     "destinationAddresses": []
   },
   "0xd74f7a4abaa75d3c19c8c598d522a4b10012f3fa": {
-    "totalUsdcSent": "105.592889",
-    "transactionCount": 15,
+    "totalUsdcSent": "110.142454",
+    "transactionCount": 16,
     "destinationAddresses": [
       "0x6ccdeefb010e4dc05bec7e2bfe2b675b7434d40f",
       "0xe799d50df3181c99eb92306ed051a02a782fbb80"
     ]
   },
   "0xe87bf8964273263e6db71081c0814deeecf8ccae": {
-    "totalUsdcSent": "104.98485",
-    "transactionCount": 16,
+    "totalUsdcSent": "109.534415",
+    "transactionCount": 17,
     "destinationAddresses": []
   },
   "0x70d789d9fdeaa5431085413cda126070a268ef96": {
-    "totalUsdcSent": "95.545182",
-    "transactionCount": 14,
+    "totalUsdcSent": "100.094747",
+    "transactionCount": 15,
     "destinationAddresses": []
+  },
+  "0x59e6a58e50ed01c520e1ca9aeed0035c2deaefc6": {
+    "totalUsdcSent": "94.548597",
+    "transactionCount": 15,
+    "destinationAddresses": [
+      "0xad3cd7f07a29935d7f9c7de92dd6bac202582711"
+    ]
+  },
+  "0xf45463cda2e3f00e38629cc0e3087548d723fcf2": {
+    "totalUsdcSent": "93.927106",
+    "transactionCount": 15,
+    "destinationAddresses": []
+  },
+  "0x73740827884a3bc7cf5406d414610b6f48d02c4d": {
+    "totalUsdcSent": "92.987855",
+    "transactionCount": 14,
+    "destinationAddresses": [
+      "0xde6eff062895c1669c4920f96206e57c8c11a6e5"
+    ]
   },
   "0x965a73d7d1fc62405efeea591471761599de512f": {
     "totalUsdcSent": "92.715212",
@@ -36,17 +56,26 @@
       "0x0ef60a69c773e92ccf43bf3113942bbe2dbfc052"
     ]
   },
-  "0x59e6a58e50ed01c520e1ca9aeed0035c2deaefc6": {
-    "totalUsdcSent": "89.999032",
-    "transactionCount": 14,
-    "destinationAddresses": [
-      "0xad3cd7f07a29935d7f9c7de92dd6bac202582711"
-    ]
-  },
-  "0xf45463cda2e3f00e38629cc0e3087548d723fcf2": {
-    "totalUsdcSent": "89.377541",
+  "0x44029725649239b02d7ed2580f6e54422dbfbed5": {
+    "totalUsdcSent": "92.230601",
     "transactionCount": 14,
     "destinationAddresses": []
+  },
+  "0x1e1b3230d5cbbad54456846d796a2433b4f50509": {
+    "totalUsdcSent": "91.326081",
+    "transactionCount": 14,
+    "destinationAddresses": [
+      "0x5bc06ad34f36a4553613bd76887a11b1c68ee35a",
+      "0xe6af199d62807496b170b983601dea321cad45c4",
+      "0x514d39f9d806fae39fbee4f0f53b858845739ae0"
+    ]
+  },
+  "0xa58199832620332b31099f15b4cf12cd13e0e4ae": {
+    "totalUsdcSent": "89.942073",
+    "transactionCount": 13,
+    "destinationAddresses": [
+      "0xd90deac9ce624358fc41a53a672abee409c7b82a"
+    ]
   },
   "0x4119b054dee68d159b7f9d7e17a152a9c6877c0c": {
     "totalUsdcSent": "89.055153",
@@ -54,18 +83,6 @@
     "destinationAddresses": [
       "0x98f047fce42c8689f6ea231e24fe2d394cce7958"
     ]
-  },
-  "0x73740827884a3bc7cf5406d414610b6f48d02c4d": {
-    "totalUsdcSent": "88.43829",
-    "transactionCount": 13,
-    "destinationAddresses": [
-      "0xde6eff062895c1669c4920f96206e57c8c11a6e5"
-    ]
-  },
-  "0x44029725649239b02d7ed2580f6e54422dbfbed5": {
-    "totalUsdcSent": "87.681036",
-    "transactionCount": 13,
-    "destinationAddresses": []
   },
   "0xfcaab3dd76d01c5b9f9693e06cb65b8907384888": {
     "totalUsdcSent": "87.521462",
@@ -75,20 +92,35 @@
       "0x92daf89dff88e9e8f7df29bfd0ff8bf495d82066"
     ]
   },
-  "0x1e1b3230d5cbbad54456846d796a2433b4f50509": {
-    "totalUsdcSent": "86.776516",
+  "0xac6681e9fb2e0d6f79ad0e9b9c79738279d55ec8": {
+    "totalUsdcSent": "86.482162",
     "transactionCount": 13,
-    "destinationAddresses": [
-      "0x5bc06ad34f36a4553613bd76887a11b1c68ee35a",
-      "0xe6af199d62807496b170b983601dea321cad45c4",
-      "0x514d39f9d806fae39fbee4f0f53b858845739ae0"
-    ]
+    "destinationAddresses": []
   },
-  "0xa58199832620332b31099f15b4cf12cd13e0e4ae": {
-    "totalUsdcSent": "85.392508",
+  "0x3101daec29121606b1d40d9642557373eff38df4": {
+    "totalUsdcSent": "86.009891",
     "transactionCount": 12,
     "destinationAddresses": [
-      "0xd90deac9ce624358fc41a53a672abee409c7b82a"
+      "0x9a0aaf34b24e8f2a999b23bd033007f17e1da2ad"
+    ]
+  },
+  "0x2859a89569081846e80ec7da42b21c317f0a2135": {
+    "totalUsdcSent": "84.412801",
+    "transactionCount": 12,
+    "destinationAddresses": []
+  },
+  "0x15efdeaf17824d7c363061e9f5ecdb9060f8ea4a": {
+    "totalUsdcSent": "84.109412",
+    "transactionCount": 13,
+    "destinationAddresses": []
+  },
+  "0x13f29ffefc97c2cf8c509f7c49641e404056cd81": {
+    "totalUsdcSent": "83.885426",
+    "transactionCount": 13,
+    "destinationAddresses": [
+      "0x83fd1053d5e5e8d78cc03916c00ae6322f568536",
+      "0x04b8212979498dec6e9dadeaddb86e9f3477437f",
+      "0x9ca74fff3acd9ab9c55171a5ad23e014d0ff2902"
     ]
   },
   "0xcf746e019f48fb7a35fce58314ae8e3161bcfbd4": {
@@ -96,41 +128,20 @@
     "transactionCount": 13,
     "destinationAddresses": []
   },
-  "0xac6681e9fb2e0d6f79ad0e9b9c79738279d55ec8": {
-    "totalUsdcSent": "81.932597",
+  "0xe1c8aca795af313505d2344ac2f317d5168f255e": {
+    "totalUsdcSent": "82.859806",
     "transactionCount": 12,
     "destinationAddresses": []
   },
-  "0x3101daec29121606b1d40d9642557373eff38df4": {
-    "totalUsdcSent": "81.460326",
-    "transactionCount": 11,
-    "destinationAddresses": [
-      "0x9a0aaf34b24e8f2a999b23bd033007f17e1da2ad"
-    ]
+  "0xe0ebdd340cc6687f3398acbce0a6e79fcd5435a3": {
+    "totalUsdcSent": "80.112319",
+    "transactionCount": 12,
+    "destinationAddresses": []
   },
   "0xf52b792f413bb7297c35a1b58434b76dffb5602e": {
     "totalUsdcSent": "79.916618",
     "transactionCount": 11,
     "destinationAddresses": []
-  },
-  "0x2859a89569081846e80ec7da42b21c317f0a2135": {
-    "totalUsdcSent": "79.863236",
-    "transactionCount": 11,
-    "destinationAddresses": []
-  },
-  "0x15efdeaf17824d7c363061e9f5ecdb9060f8ea4a": {
-    "totalUsdcSent": "79.559847",
-    "transactionCount": 12,
-    "destinationAddresses": []
-  },
-  "0x13f29ffefc97c2cf8c509f7c49641e404056cd81": {
-    "totalUsdcSent": "79.335861",
-    "transactionCount": 12,
-    "destinationAddresses": [
-      "0x83fd1053d5e5e8d78cc03916c00ae6322f568536",
-      "0x04b8212979498dec6e9dadeaddb86e9f3477437f",
-      "0x9ca74fff3acd9ab9c55171a5ad23e014d0ff2902"
-    ]
   },
   "0xccad924a113439cc7e53758042c51eddd48cdbfb": {
     "totalUsdcSent": "78.87577",
@@ -139,10 +150,29 @@
       "0xf1ac00fa391bd3e399b5cef70c5f4dc92b7a7964"
     ]
   },
-  "0xe1c8aca795af313505d2344ac2f317d5168f255e": {
-    "totalUsdcSent": "78.310241",
-    "transactionCount": 11,
+  "0x4984c660811fc8447e5ff16d1f17cd49246aeb74": {
+    "totalUsdcSent": "78.776886",
+    "transactionCount": 12,
     "destinationAddresses": []
+  },
+  "0x9b7a7ab26da3d65ec55e8b0eff6e699dc23cc55e": {
+    "totalUsdcSent": "78.156602",
+    "transactionCount": 12,
+    "destinationAddresses": []
+  },
+  "0xf8e956186c39d8508713154d4f1374ce3d582400": {
+    "totalUsdcSent": "78.019352",
+    "transactionCount": 12,
+    "destinationAddresses": [
+      "0xec0b68626f7f4b4ac4c9cae6def857949be12a2d"
+    ]
+  },
+  "0x4a9dccec5653a5c47daa075256573aefd0d328ba": {
+    "totalUsdcSent": "77.66722",
+    "transactionCount": 11,
+    "destinationAddresses": [
+      "0x34388dea3166f1770b7b2303376d4f493889e7da"
+    ]
   },
   "0x98dedf8e34c42c2fb35ef6aed541944b212624d6": {
     "totalUsdcSent": "77.665219",
@@ -152,49 +182,33 @@
       "0x27ba9d4807a355ccd917c82f3b3451ca03af06f0"
     ]
   },
-  "0xe0ebdd340cc6687f3398acbce0a6e79fcd5435a3": {
-    "totalUsdcSent": "75.562754",
-    "transactionCount": 11,
-    "destinationAddresses": []
-  },
-  "0x4984c660811fc8447e5ff16d1f17cd49246aeb74": {
-    "totalUsdcSent": "74.227321",
-    "transactionCount": 11,
-    "destinationAddresses": []
-  },
-  "0x9b7a7ab26da3d65ec55e8b0eff6e699dc23cc55e": {
-    "totalUsdcSent": "73.607037",
-    "transactionCount": 11,
-    "destinationAddresses": []
-  },
-  "0xf8e956186c39d8508713154d4f1374ce3d582400": {
-    "totalUsdcSent": "73.469787",
-    "transactionCount": 11,
-    "destinationAddresses": [
-      "0xec0b68626f7f4b4ac4c9cae6def857949be12a2d"
-    ]
-  },
-  "0x4a9dccec5653a5c47daa075256573aefd0d328ba": {
-    "totalUsdcSent": "73.117655",
-    "transactionCount": 10,
-    "destinationAddresses": [
-      "0x34388dea3166f1770b7b2303376d4f493889e7da"
-    ]
-  },
   "0x3edc66b9d901970e763df5de0b7e7a811e770834": {
-    "totalUsdcSent": "72.998119",
-    "transactionCount": 11,
+    "totalUsdcSent": "77.547684",
+    "transactionCount": 12,
     "destinationAddresses": [
       "0xe62da247ecd63a812f10d87d06819645e823fcad"
     ]
   },
   "0x0d81dd50ba876801281cf8d3835ea94a2b726ce4": {
-    "totalUsdcSent": "72.8041",
-    "transactionCount": 10,
+    "totalUsdcSent": "77.353665",
+    "transactionCount": 11,
     "destinationAddresses": []
   },
   "0x140dfcc434f9541a2d8746144e0d7de2d80b39d4": {
-    "totalUsdcSent": "72.636518",
+    "totalUsdcSent": "77.186083",
+    "transactionCount": 12,
+    "destinationAddresses": []
+  },
+  "0x239230397d9abd3fa273de56a1d031dabe734976": {
+    "totalUsdcSent": "75.063389",
+    "transactionCount": 12,
+    "destinationAddresses": [
+      "0x2d6af6e8c8d1031b1f1056adbf5c7ac46e643f5a",
+      "0x21d3b978cc1cc3431bf6fe8da85223a2caf67116"
+    ]
+  },
+  "0x372993e04b58ed9b741fb01f25c0046810790863": {
+    "totalUsdcSent": "72.256342",
     "transactionCount": 11,
     "destinationAddresses": []
   },
@@ -203,12 +217,31 @@
     "transactionCount": 10,
     "destinationAddresses": []
   },
-  "0x239230397d9abd3fa273de56a1d031dabe734976": {
-    "totalUsdcSent": "70.513824",
+  "0x0adf8a94168ad6b2ea8285c04a6ff66aa4c0d112": {
+    "totalUsdcSent": "71.033928",
+    "transactionCount": 11,
+    "destinationAddresses": []
+  },
+  "0xa8aa312eb3bd86b8d664608fcbcea12a6b0f9b91": {
+    "totalUsdcSent": "70.562037",
     "transactionCount": 11,
     "destinationAddresses": [
-      "0x2d6af6e8c8d1031b1f1056adbf5c7ac46e643f5a",
-      "0x21d3b978cc1cc3431bf6fe8da85223a2caf67116"
+      "0x653ff253b0c7c1cc52f484e891b71f9f1f010bfb"
+    ]
+  },
+  "0x42dac08ac8888610ffc37d326b29ec0ef6c5c40b": {
+    "totalUsdcSent": "70.192617",
+    "transactionCount": 11,
+    "destinationAddresses": [
+      "0x894c49ec8b9cf64d1d89d517db5d356ed3743133"
+    ]
+  },
+  "0xff31803727d35303061f2bb9f1c9195b7206eec3": {
+    "totalUsdcSent": "68.787678",
+    "transactionCount": 11,
+    "destinationAddresses": [
+      "0x82f22685eb23d0f64d2f0c7e204b7d47077d03e0",
+      "0x47e6d2f2f7a90c5bcdd196b2dd9b97c1ab5373a1"
     ]
   },
   "0x06378b7474ad50256feb83265517edec9d990852": {
@@ -219,23 +252,21 @@
       "0x5560650bf336dafc2aab23e6c2bcc78028877725"
     ]
   },
-  "0x372993e04b58ed9b741fb01f25c0046810790863": {
-    "totalUsdcSent": "67.706777",
-    "transactionCount": 10,
-    "destinationAddresses": []
-  },
   "0xeee2e92ccd938fe718f266abddbd380dd9dfc340": {
     "totalUsdcSent": "67.194276",
     "transactionCount": 10,
     "destinationAddresses": []
   },
+  "0x347605be8d7138bced706dbb5adbd3969796dbe2": {
+    "totalUsdcSent": "67.097735",
+    "transactionCount": 10,
+    "destinationAddresses": [
+      "0x9b789bbf7e3008c295ba73920beda93ebdf26cfc",
+      "0x50f8c08b0124092e1001b355f4b8ae2df85f715c"
+    ]
+  },
   "0xffb1ce9e77fbb1a208f9d935ea92554ce8710315": {
     "totalUsdcSent": "66.868695",
-    "transactionCount": 10,
-    "destinationAddresses": []
-  },
-  "0x0adf8a94168ad6b2ea8285c04a6ff66aa4c0d112": {
-    "totalUsdcSent": "66.484363",
     "transactionCount": 10,
     "destinationAddresses": []
   },
@@ -244,35 +275,27 @@
     "transactionCount": 10,
     "destinationAddresses": []
   },
-  "0xa8aa312eb3bd86b8d664608fcbcea12a6b0f9b91": {
-    "totalUsdcSent": "66.012472",
+  "0xbc1783f31b1582d3461dfefc4e26d380be26d145": {
+    "totalUsdcSent": "65.144708",
     "transactionCount": 10,
-    "destinationAddresses": [
-      "0x653ff253b0c7c1cc52f484e891b71f9f1f010bfb"
-    ]
+    "destinationAddresses": []
   },
-  "0x42dac08ac8888610ffc37d326b29ec0ef6c5c40b": {
-    "totalUsdcSent": "65.643052",
+  "0x7ed7baaf7feac8911b7dddd9cbe934be248cc5d1": {
+    "totalUsdcSent": "64.91873",
     "transactionCount": 10,
-    "destinationAddresses": [
-      "0x894c49ec8b9cf64d1d89d517db5d356ed3743133"
-    ]
+    "destinationAddresses": []
   },
-  "0xff31803727d35303061f2bb9f1c9195b7206eec3": {
-    "totalUsdcSent": "64.238113",
-    "transactionCount": 10,
-    "destinationAddresses": [
-      "0x82f22685eb23d0f64d2f0c7e204b7d47077d03e0",
-      "0x47e6d2f2f7a90c5bcdd196b2dd9b97c1ab5373a1"
-    ]
-  },
-  "0x347605be8d7138bced706dbb5adbd3969796dbe2": {
-    "totalUsdcSent": "62.54817",
+  "0x897c9fe04e058f2ee039f5edf0a0af0ed18fe540": {
+    "totalUsdcSent": "63.945084",
     "transactionCount": 9,
     "destinationAddresses": [
-      "0x9b789bbf7e3008c295ba73920beda93ebdf26cfc",
-      "0x50f8c08b0124092e1001b355f4b8ae2df85f715c"
+      "0x0f76a8281f14a2965aaf5a02bf96874c00087ae8"
     ]
+  },
+  "0xf09ac3c9b60a6fc41e229063157fc374704be2d4": {
+    "totalUsdcSent": "63.585965",
+    "transactionCount": 10,
+    "destinationAddresses": []
   },
   "0xb2a8bbd674980bd881566ecdaf4468ffb149f8bd": {
     "totalUsdcSent": "62.181227",
@@ -289,32 +312,53 @@
     "transactionCount": 10,
     "destinationAddresses": []
   },
-  "0xbc1783f31b1582d3461dfefc4e26d380be26d145": {
-    "totalUsdcSent": "60.595143",
-    "transactionCount": 9,
-    "destinationAddresses": []
-  },
-  "0x7ed7baaf7feac8911b7dddd9cbe934be248cc5d1": {
-    "totalUsdcSent": "60.369165",
-    "transactionCount": 9,
-    "destinationAddresses": []
-  },
-  "0x897c9fe04e058f2ee039f5edf0a0af0ed18fe540": {
-    "totalUsdcSent": "59.395519",
-    "transactionCount": 8,
+  "0x8e9ad2c3650b8997fd3f64aecda36bd29f97aa7e": {
+    "totalUsdcSent": "61.538912",
+    "transactionCount": 10,
     "destinationAddresses": [
-      "0x0f76a8281f14a2965aaf5a02bf96874c00087ae8"
+      "0x770b6ce53aecc3c6a09e666b25c20bcbfb4b3b59",
+      "0x343d1ff52cc492bfdcbeac4ed1d567febe08b974"
     ]
   },
-  "0xf09ac3c9b60a6fc41e229063157fc374704be2d4": {
-    "totalUsdcSent": "59.0364",
+  "0x7ad96e63e7a95e237f5931bbf257f96fe81e972a": {
+    "totalUsdcSent": "60.026444",
+    "transactionCount": 8,
+    "destinationAddresses": []
+  },
+  "0xbc895b88dc5e7289b0434336f2c6649aadb15e8e": {
+    "totalUsdcSent": "59.28866",
     "transactionCount": 9,
+    "destinationAddresses": []
+  },
+  "0xa4b086aec6310a3d36e6838ffd5e390e32d3fa59": {
+    "totalUsdcSent": "59.16791",
+    "transactionCount": 9,
+    "destinationAddresses": []
+  },
+  "0x4eeb5c377d040b5cc8d06c5c90aa2d02b158fd19": {
+    "totalUsdcSent": "58.886915",
+    "transactionCount": 9,
+    "destinationAddresses": [
+      "0xfe49b248366f1ccc0b2617d10c4590188ce58e78",
+      "0xb9c10506dc09afb01e782d2a6203a36a05e61413"
+    ]
+  },
+  "0x86472da9188b895fa11820ccb6452e45dce4859d": {
+    "totalUsdcSent": "58.184169",
+    "transactionCount": 10,
     "destinationAddresses": []
   },
   "0xdd57aae8306f86aa80640154d29ba348c217a0d2": {
     "totalUsdcSent": "58.144096",
     "transactionCount": 8,
     "destinationAddresses": []
+  },
+  "0xb27112b9d6ffc4cf0af6fe7861eb45757e18f54a": {
+    "totalUsdcSent": "58.022152",
+    "transactionCount": 9,
+    "destinationAddresses": [
+      "0xa9f7c123cb756af83d79ad02a216dc7606b8e58a"
+    ]
   },
   "0x052eb6ad2936d9cb816324bda30b4c31f412c593": {
     "totalUsdcSent": "57.667804",
@@ -324,13 +368,15 @@
       "0x4642b3ea839fd86c6670bb13e0103341532167b6"
     ]
   },
-  "0x8e9ad2c3650b8997fd3f64aecda36bd29f97aa7e": {
-    "totalUsdcSent": "56.989347",
+  "0x20a573aef5b445945cc59b24552746135b0f6b62": {
+    "totalUsdcSent": "57.501921",
     "transactionCount": 9,
-    "destinationAddresses": [
-      "0x770b6ce53aecc3c6a09e666b25c20bcbfb4b3b59",
-      "0x343d1ff52cc492bfdcbeac4ed1d567febe08b974"
-    ]
+    "destinationAddresses": []
+  },
+  "0x0860b7df335da48009c13ccd3b69e7fe2ea4da27": {
+    "totalUsdcSent": "57.067842",
+    "transactionCount": 8,
+    "destinationAddresses": []
   },
   "0xb0166a7452136c83cfadfc344049d5c7223c6878": {
     "totalUsdcSent": "56.65161",
@@ -357,23 +403,8 @@
       "0x13f670991d138758c9fb8aecc9852d0bfe2dfaed"
     ]
   },
-  "0x7ad96e63e7a95e237f5931bbf257f96fe81e972a": {
-    "totalUsdcSent": "55.476879",
-    "transactionCount": 7,
-    "destinationAddresses": []
-  },
   "0xf323609f69e44b3cf7f3329f6502fa075db9df91": {
     "totalUsdcSent": "55.156939",
-    "transactionCount": 8,
-    "destinationAddresses": []
-  },
-  "0xbc895b88dc5e7289b0434336f2c6649aadb15e8e": {
-    "totalUsdcSent": "54.739095",
-    "transactionCount": 8,
-    "destinationAddresses": []
-  },
-  "0xa4b086aec6310a3d36e6838ffd5e390e32d3fa59": {
-    "totalUsdcSent": "54.618345",
     "transactionCount": 8,
     "destinationAddresses": []
   },
@@ -382,30 +413,17 @@
     "transactionCount": 8,
     "destinationAddresses": []
   },
-  "0x4eeb5c377d040b5cc8d06c5c90aa2d02b158fd19": {
-    "totalUsdcSent": "54.33735",
+  "0x4edf237b23a9600358c154d93d5552d6353bbd7c": {
+    "totalUsdcSent": "54.136864",
     "transactionCount": 8,
     "destinationAddresses": [
-      "0xfe49b248366f1ccc0b2617d10c4590188ce58e78",
-      "0xb9c10506dc09afb01e782d2a6203a36a05e61413"
+      "0x516ffb1638f5bea91800364d34378bdc5b2b386d"
     ]
   },
   "0x59e1e5410ed56a80f622698ad2fc4458ff0f89fb": {
     "totalUsdcSent": "54.080119",
     "transactionCount": 8,
     "destinationAddresses": []
-  },
-  "0x86472da9188b895fa11820ccb6452e45dce4859d": {
-    "totalUsdcSent": "53.634604",
-    "transactionCount": 9,
-    "destinationAddresses": []
-  },
-  "0xb27112b9d6ffc4cf0af6fe7861eb45757e18f54a": {
-    "totalUsdcSent": "53.472587",
-    "transactionCount": 8,
-    "destinationAddresses": [
-      "0xa9f7c123cb756af83d79ad02a216dc7606b8e58a"
-    ]
   },
   "0xf5953d77a774faad4185fb8c87d54657f3034770": {
     "totalUsdcSent": "52.969158",
@@ -414,18 +432,13 @@
       "0x460e274f7193627366ce3384af447ad1e0419898"
     ]
   },
-  "0x20a573aef5b445945cc59b24552746135b0f6b62": {
-    "totalUsdcSent": "52.952356",
-    "transactionCount": 8,
-    "destinationAddresses": []
-  },
   "0x9d2514fa9cda7b466e8d61c8dcbb9e412c1b6a5e": {
     "totalUsdcSent": "52.92184",
     "transactionCount": 7,
     "destinationAddresses": []
   },
-  "0x0860b7df335da48009c13ccd3b69e7fe2ea4da27": {
-    "totalUsdcSent": "52.518277",
+  "0xf6a50747783b14d31142b4e192747eb7ba6a5963": {
+    "totalUsdcSent": "52.834167",
     "transactionCount": 7,
     "destinationAddresses": []
   },
@@ -441,9 +454,24 @@
     "transactionCount": 8,
     "destinationAddresses": []
   },
+  "0x2a577713188fffd5f2871a0714ea49d786dc5dd3": {
+    "totalUsdcSent": "51.180313",
+    "transactionCount": 7,
+    "destinationAddresses": []
+  },
   "0x00d194405f7157afc3d6bf9a0b8d4c3010edeea2": {
     "totalUsdcSent": "50.072751",
     "transactionCount": 7,
+    "destinationAddresses": []
+  },
+  "0xd3e6f662ee10c9cecf651c1377b6a757f774b2ce": {
+    "totalUsdcSent": "50.053861",
+    "transactionCount": 8,
+    "destinationAddresses": []
+  },
+  "0xafb3d07b3b4fe1f839afbd1f7e527b358ede245c": {
+    "totalUsdcSent": "49.862461",
+    "transactionCount": 8,
     "destinationAddresses": []
   },
   "0xafff3b22d7c2671ed5bc32eba17cf2ea3f069a60": {
@@ -451,27 +479,34 @@
     "transactionCount": 7,
     "destinationAddresses": []
   },
-  "0x4edf237b23a9600358c154d93d5552d6353bbd7c": {
-    "totalUsdcSent": "49.587299",
+  "0x82edd6d714c3d8c89771a912fae6670b69810d88": {
+    "totalUsdcSent": "48.931647",
+    "transactionCount": 7,
+    "destinationAddresses": []
+  },
+  "0x1d250aeb9d669a8a51b5b92030f5a9994954253e": {
+    "totalUsdcSent": "48.542059",
     "transactionCount": 7,
     "destinationAddresses": [
-      "0x516ffb1638f5bea91800364d34378bdc5b2b386d"
+      "0xeb0a7f59e4ba007a565c07d7e612f2c3d4e2d2a0"
     ]
-  },
-  "0xf6a50747783b14d31142b4e192747eb7ba6a5963": {
-    "totalUsdcSent": "48.284602",
-    "transactionCount": 6,
-    "destinationAddresses": []
   },
   "0x73b9ad955bf9e4f9e59b1baa7b42c0adc9dd1cd9": {
     "totalUsdcSent": "47.842732",
     "transactionCount": 8,
     "destinationAddresses": []
   },
-  "0x2a577713188fffd5f2871a0714ea49d786dc5dd3": {
-    "totalUsdcSent": "46.630748",
-    "transactionCount": 6,
+  "0x8d6ae50430a0a462d96bed857521936ba6ecd88d": {
+    "totalUsdcSent": "47.230568",
+    "transactionCount": 8,
     "destinationAddresses": []
+  },
+  "0xe12483ec179efdb3796512aeb7a56beb4a5753c2": {
+    "totalUsdcSent": "46.559332",
+    "transactionCount": 8,
+    "destinationAddresses": [
+      "0x9fc71041215f8f6cbe2247ba059deca19a2ca197"
+    ]
   },
   "0xd2e7d96efa0293b8f9752897034f9e27241a1e92": {
     "totalUsdcSent": "45.716761",
@@ -485,15 +520,13 @@
     "transactionCount": 6,
     "destinationAddresses": []
   },
-  "0xd3e6f662ee10c9cecf651c1377b6a757f774b2ce": {
-    "totalUsdcSent": "45.504296",
-    "transactionCount": 7,
-    "destinationAddresses": []
-  },
-  "0xafb3d07b3b4fe1f839afbd1f7e527b358ede245c": {
-    "totalUsdcSent": "45.312896",
-    "transactionCount": 7,
-    "destinationAddresses": []
+  "0x47eaaf6f793d2d642de0527f6b9637cfe167022c": {
+    "totalUsdcSent": "45.601989",
+    "transactionCount": 8,
+    "destinationAddresses": [
+      "0x9e1ca01a2d05a9de3088c8e93f221b40c3a01d8f",
+      "0x487c6480c33f32435f99cfa4b1e09c0d4e4165f7"
+    ]
   },
   "0x8487e16243326ecb4f84d9726708ddc4d593d20f": {
     "totalUsdcSent": "44.423434",
@@ -503,25 +536,8 @@
       "0xf8d6b12894d4d8980488e16d71414a13aea7b25e"
     ]
   },
-  "0x82edd6d714c3d8c89771a912fae6670b69810d88": {
-    "totalUsdcSent": "44.382082",
-    "transactionCount": 6,
-    "destinationAddresses": []
-  },
   "0x61a7b4eaf72df2a44817fc338555db8b9e5b77ce": {
     "totalUsdcSent": "44.017594",
-    "transactionCount": 7,
-    "destinationAddresses": []
-  },
-  "0x1d250aeb9d669a8a51b5b92030f5a9994954253e": {
-    "totalUsdcSent": "43.992494",
-    "transactionCount": 6,
-    "destinationAddresses": [
-      "0xeb0a7f59e4ba007a565c07d7e612f2c3d4e2d2a0"
-    ]
-  },
-  "0x8d6ae50430a0a462d96bed857521936ba6ecd88d": {
-    "totalUsdcSent": "42.681003",
     "transactionCount": 7,
     "destinationAddresses": []
   },
@@ -532,12 +548,15 @@
       "0x0377c5d6acadee75abba3070324e629fefac51e0"
     ]
   },
-  "0xe12483ec179efdb3796512aeb7a56beb4a5753c2": {
-    "totalUsdcSent": "42.009767",
+  "0x524a6811171ebab69331a89a52a16b2a14d106f3": {
+    "totalUsdcSent": "42.373729",
     "transactionCount": 7,
-    "destinationAddresses": [
-      "0x9fc71041215f8f6cbe2247ba059deca19a2ca197"
-    ]
+    "destinationAddresses": []
+  },
+  "0x70961f7c275f28e7514315f42c45d817641e722e": {
+    "totalUsdcSent": "41.864698",
+    "transactionCount": 6,
+    "destinationAddresses": []
   },
   "0xece0c91dc8f189192c522d433ef0ce26d9dd407c": {
     "totalUsdcSent": "41.529741",
@@ -549,18 +568,17 @@
     "transactionCount": 6,
     "destinationAddresses": []
   },
-  "0x47eaaf6f793d2d642de0527f6b9637cfe167022c": {
-    "totalUsdcSent": "41.052424",
-    "transactionCount": 7,
-    "destinationAddresses": [
-      "0x9e1ca01a2d05a9de3088c8e93f221b40c3a01d8f",
-      "0x487c6480c33f32435f99cfa4b1e09c0d4e4165f7"
-    ]
-  },
   "0xc1941876cf9c2f1fa32048d2d9d24fa915694b32": {
     "totalUsdcSent": "40.779997",
     "transactionCount": 6,
     "destinationAddresses": []
+  },
+  "0xfffb950793b194fafb0890e02a135d929489cadc": {
+    "totalUsdcSent": "40.772967",
+    "transactionCount": 6,
+    "destinationAddresses": [
+      "0x278db415b3c969e789e1ec9e80e1e001a5dcee82"
+    ]
   },
   "0xf6bcecd97ea38ac80898f34e312a2ca5a30d7dcf": {
     "totalUsdcSent": "40.733397",
@@ -576,23 +594,45 @@
     "transactionCount": 6,
     "destinationAddresses": []
   },
+  "0x202a0ff73e3d9bb202faa9ac00bb036d26634349": {
+    "totalUsdcSent": "40.221344",
+    "transactionCount": 7,
+    "destinationAddresses": []
+  },
   "0xb7e217cf19af8e7c53b63c962249e0b7acea31c4": {
     "totalUsdcSent": "39.699191",
     "transactionCount": 7,
     "destinationAddresses": []
   },
-  "0x524a6811171ebab69331a89a52a16b2a14d106f3": {
-    "totalUsdcSent": "37.824164",
-    "transactionCount": 6,
+  "0xe791cfb9c73d8b6b3e5323d39d9ecdee84a6153d": {
+    "totalUsdcSent": "39.653231",
+    "transactionCount": 7,
     "destinationAddresses": []
   },
-  "0x70961f7c275f28e7514315f42c45d817641e722e": {
-    "totalUsdcSent": "37.315133",
+  "0x19717203207fba44abd2d924c760ced82e97d55d": {
+    "totalUsdcSent": "38.270136",
+    "transactionCount": 6,
+    "destinationAddresses": [
+      "0xe18d5b93ff4dfaa8181c3888e9f493c1f58800f5"
+    ]
+  },
+  "0x6c9ef866012618a274da26a7358f24a51785e62f": {
+    "totalUsdcSent": "37.730763",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0xefae1cc29e28607b7df22057f3afec78a7c000a0": {
+    "totalUsdcSent": "36.970221",
     "transactionCount": 5,
     "destinationAddresses": []
   },
   "0x2dbe68ddedf122dbcda904c483d396f574301a1a": {
     "totalUsdcSent": "36.790902",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0x8fcee752eefde8829616aad13726158a7e8e0e3f": {
+    "totalUsdcSent": "36.511685",
     "transactionCount": 5,
     "destinationAddresses": []
   },
@@ -611,36 +651,24 @@
     "transactionCount": 5,
     "destinationAddresses": []
   },
-  "0xfffb950793b194fafb0890e02a135d929489cadc": {
-    "totalUsdcSent": "36.223402",
-    "transactionCount": 5,
-    "destinationAddresses": []
-  },
-  "0x202a0ff73e3d9bb202faa9ac00bb036d26634349": {
-    "totalUsdcSent": "35.671779",
+  "0x25ed14bc83169518a25e677a816c0c23f39b30e5": {
+    "totalUsdcSent": "34.306501",
     "transactionCount": 6,
     "destinationAddresses": []
   },
-  "0xe791cfb9c73d8b6b3e5323d39d9ecdee84a6153d": {
-    "totalUsdcSent": "35.103666",
+  "0x55bd494567dc634b32a4045b58e47b013f62b328": {
+    "totalUsdcSent": "33.700745",
     "transactionCount": 6,
     "destinationAddresses": []
-  },
-  "0x19717203207fba44abd2d924c760ced82e97d55d": {
-    "totalUsdcSent": "33.720571",
-    "transactionCount": 5,
-    "destinationAddresses": [
-      "0xe18d5b93ff4dfaa8181c3888e9f493c1f58800f5"
-    ]
   },
   "0xc4399c2a3f30f17a164b5240836ce6a906977a3c": {
     "totalUsdcSent": "33.59691",
     "transactionCount": 4,
     "destinationAddresses": []
   },
-  "0x6c9ef866012618a274da26a7358f24a51785e62f": {
-    "totalUsdcSent": "33.181198",
-    "transactionCount": 4,
+  "0x891612c0883fef86914917434e8cbda7a424b366": {
+    "totalUsdcSent": "33.009236",
+    "transactionCount": 5,
     "destinationAddresses": []
   },
   "0xde4047cd8e540e8536fce9b43257f588f8b4f5de": {
@@ -650,9 +678,9 @@
       "0x66aee38d037e1bf37e5dcdbe9fae23b728637670"
     ]
   },
-  "0xefae1cc29e28607b7df22057f3afec78a7c000a0": {
-    "totalUsdcSent": "32.420656",
-    "transactionCount": 4,
+  "0x7f61b02292cae4166efe6cd614a5fa048614eb5b": {
+    "totalUsdcSent": "32.818593",
+    "transactionCount": 5,
     "destinationAddresses": []
   },
   "0xfcdf4ae84c4610c38ce772fa1f3a85115c276adb": {
@@ -665,14 +693,41 @@
     "transactionCount": 5,
     "destinationAddresses": []
   },
+  "0xf29c8a7c789cf9d97d516f1260d16b96df004f12": {
+    "totalUsdcSent": "32.122127",
+    "transactionCount": 6,
+    "destinationAddresses": []
+  },
   "0x8be020f397186b2fe665f63ee456ae1acdd63eb2": {
     "totalUsdcSent": "32.091317",
     "transactionCount": 4,
     "destinationAddresses": []
   },
-  "0x8fcee752eefde8829616aad13726158a7e8e0e3f": {
-    "totalUsdcSent": "31.96212",
-    "transactionCount": 4,
+  "0x2ae243d08d5b00dae2ed1848b99a38cddd8aa669": {
+    "totalUsdcSent": "32.008983",
+    "transactionCount": 6,
+    "destinationAddresses": [
+      "0x4386a86277a03ff37188416767ad74e4381b226c"
+    ]
+  },
+  "0x903b3713f39d9ea2b227e152d690bf19a90a615f": {
+    "totalUsdcSent": "31.7906",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0x10bd5521609f2712b7e27cac5cb32f400b05f596": {
+    "totalUsdcSent": "31.779545",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0x0daea494b217f83b790c0b29260a2fa25bd15550": {
+    "totalUsdcSent": "31.779545",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0x0c14756a45b250ed50a3c86000fec91658cf2a71": {
+    "totalUsdcSent": "31.779545",
+    "transactionCount": 5,
     "destinationAddresses": []
   },
   "0x3154581b46f6461b8e2b9d0aeae3fb2b474d2c40": {
@@ -682,13 +737,30 @@
       "0xf5800eb41fd0036dcaec3e45022cd1077d9b8306"
     ]
   },
+  "0xb785eb24ae568f04df1970c538f11b0e3e0daee0": {
+    "totalUsdcSent": "31.478136",
+    "transactionCount": 5,
+    "destinationAddresses": [
+      "0x4544f08e4ad470e38eadfae75eb58581b4f260a3"
+    ]
+  },
   "0x2d0950e49351bea80875733182f6223a6c44aa84": {
     "totalUsdcSent": "31.370381",
     "transactionCount": 5,
     "destinationAddresses": []
   },
+  "0xe73a3b0bcbc593da931c875e933fcb759f03c58e": {
+    "totalUsdcSent": "30.983322",
+    "transactionCount": 6,
+    "destinationAddresses": []
+  },
   "0x479575180cfd9476d3c03f102bcdfe93469431f2": {
     "totalUsdcSent": "30.954669",
+    "transactionCount": 5,
+    "destinationAddresses": []
+  },
+  "0x1b6576fdf24bb08edfa6b6e713d4bbd8062a502a": {
+    "totalUsdcSent": "30.815624",
     "transactionCount": 5,
     "destinationAddresses": []
   },
@@ -707,16 +779,6 @@
     "transactionCount": 5,
     "destinationAddresses": []
   },
-  "0x25ed14bc83169518a25e677a816c0c23f39b30e5": {
-    "totalUsdcSent": "29.756936",
-    "transactionCount": 5,
-    "destinationAddresses": []
-  },
-  "0x55bd494567dc634b32a4045b58e47b013f62b328": {
-    "totalUsdcSent": "29.15118",
-    "transactionCount": 5,
-    "destinationAddresses": []
-  },
   "0x67bb3d3ed713abc3ee366b6946fa14f9758bac6b": {
     "totalUsdcSent": "28.764529",
     "transactionCount": 5,
@@ -730,13 +792,8 @@
     "transactionCount": 5,
     "destinationAddresses": []
   },
-  "0x891612c0883fef86914917434e8cbda7a424b366": {
-    "totalUsdcSent": "28.459671",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
-  "0x7f61b02292cae4166efe6cd614a5fa048614eb5b": {
-    "totalUsdcSent": "28.269028",
+  "0x0a69a1d65540ec55f19ac33d22b16e3c0b39c3f3": {
+    "totalUsdcSent": "28.671597",
     "transactionCount": 4,
     "destinationAddresses": []
   },
@@ -748,18 +805,6 @@
       "0xb9c10506dc09afb01e782d2a6203a36a05e61413"
     ]
   },
-  "0xf29c8a7c789cf9d97d516f1260d16b96df004f12": {
-    "totalUsdcSent": "27.572562",
-    "transactionCount": 5,
-    "destinationAddresses": []
-  },
-  "0x2ae243d08d5b00dae2ed1848b99a38cddd8aa669": {
-    "totalUsdcSent": "27.459418",
-    "transactionCount": 5,
-    "destinationAddresses": [
-      "0x4386a86277a03ff37188416767ad74e4381b226c"
-    ]
-  },
   "0x98d60b68339f37bb5f8b57183c3b049c084f3b0c": {
     "totalUsdcSent": "27.241035",
     "transactionCount": 4,
@@ -767,26 +812,6 @@
   },
   "0xbddf70613b2ef542400605d38ca7f119f4bbf810": {
     "totalUsdcSent": "27.241035",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
-  "0x903b3713f39d9ea2b227e152d690bf19a90a615f": {
-    "totalUsdcSent": "27.241035",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
-  "0x10bd5521609f2712b7e27cac5cb32f400b05f596": {
-    "totalUsdcSent": "27.22998",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
-  "0x0daea494b217f83b790c0b29260a2fa25bd15550": {
-    "totalUsdcSent": "27.22998",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
-  "0x0c14756a45b250ed50a3c86000fec91658cf2a71": {
-    "totalUsdcSent": "27.22998",
     "transactionCount": 4,
     "destinationAddresses": []
   },
@@ -810,23 +835,6 @@
     "transactionCount": 5,
     "destinationAddresses": []
   },
-  "0xb785eb24ae568f04df1970c538f11b0e3e0daee0": {
-    "totalUsdcSent": "26.928571",
-    "transactionCount": 4,
-    "destinationAddresses": [
-      "0x4544f08e4ad470e38eadfae75eb58581b4f260a3"
-    ]
-  },
-  "0xe73a3b0bcbc593da931c875e933fcb759f03c58e": {
-    "totalUsdcSent": "26.433757",
-    "transactionCount": 5,
-    "destinationAddresses": []
-  },
-  "0x1b6576fdf24bb08edfa6b6e713d4bbd8062a502a": {
-    "totalUsdcSent": "26.266059",
-    "transactionCount": 4,
-    "destinationAddresses": []
-  },
   "0xb7d010452d22bf5f0f5640727c774271524f7ebd": {
     "totalUsdcSent": "26.010495",
     "transactionCount": 5,
@@ -837,12 +845,27 @@
     "transactionCount": 3,
     "destinationAddresses": []
   },
+  "0xe2cf5351ea7638b2cea1aca751b26ae9c47fc031": {
+    "totalUsdcSent": "25.032879",
+    "transactionCount": 4,
+    "destinationAddresses": []
+  },
+  "0x2deb35fcc101baff9c0df623e642f32f1f986cbc": {
+    "totalUsdcSent": "25.032879",
+    "transactionCount": 4,
+    "destinationAddresses": []
+  },
   "0x23f7559d8b6cca1ce33bfc7190a63b7d27647fb5": {
     "totalUsdcSent": "24.903388",
     "transactionCount": 3,
     "destinationAddresses": [
       "0x0f76a8281f14a2965aaf5a02bf96874c00087ae8"
     ]
+  },
+  "0xb22002227f0a30f7599c6bda82bc071190e92cfe": {
+    "totalUsdcSent": "24.883611",
+    "transactionCount": 4,
+    "destinationAddresses": []
   },
   "0xb47f36bb694d675473f06f4e7adb1c88cd3971cd": {
     "totalUsdcSent": "24.760326",
@@ -861,11 +884,6 @@
       "0x68efd12793149550ec6f4af3805e6f33a86116ec",
       "0x742b97dc68bcc3475feb734c2df2c76f25664532"
     ]
-  },
-  "0x0a69a1d65540ec55f19ac33d22b16e3c0b39c3f3": {
-    "totalUsdcSent": "24.122032",
-    "transactionCount": 3,
-    "destinationAddresses": []
   },
   "0x42001be96d029f34bd4ee141f673694b60e22c47": {
     "totalUsdcSent": "23.842971",
@@ -929,16 +947,6 @@
       "0x69ec014c15baf1c96620b6ba02a391ababb9c96b"
     ]
   },
-  "0xe2cf5351ea7638b2cea1aca751b26ae9c47fc031": {
-    "totalUsdcSent": "20.483314",
-    "transactionCount": 3,
-    "destinationAddresses": []
-  },
-  "0x2deb35fcc101baff9c0df623e642f32f1f986cbc": {
-    "totalUsdcSent": "20.483314",
-    "transactionCount": 3,
-    "destinationAddresses": []
-  },
   "0x30b2990ac4d66d2516a200ed5908dfe6ceff6889": {
     "totalUsdcSent": "20.397521",
     "transactionCount": 3,
@@ -949,8 +957,25 @@
     "transactionCount": 3,
     "destinationAddresses": []
   },
-  "0xb22002227f0a30f7599c6bda82bc071190e92cfe": {
-    "totalUsdcSent": "20.334046",
+  "0x5c9f33ecbfa3a620d83bfe82fe728126a5c056f6": {
+    "totalUsdcSent": "19.831768",
+    "transactionCount": 3,
+    "destinationAddresses": []
+  },
+  "0x7594f1f10802b2e61c40c2a56f864bcfd8ade34e": {
+    "totalUsdcSent": "19.831768",
+    "transactionCount": 3,
+    "destinationAddresses": [
+      "0x06d74e9ec399058f382682c578cbb0f98e5806fc"
+    ]
+  },
+  "0x5c76d3ae031add10c6c980e655c8df122723c56b": {
+    "totalUsdcSent": "19.831768",
+    "transactionCount": 3,
+    "destinationAddresses": []
+  },
+  "0xb2d5bccecd8deced73468aef1aa5fef48165957e": {
+    "totalUsdcSent": "19.773474",
     "transactionCount": 3,
     "destinationAddresses": []
   },
@@ -978,14 +1003,32 @@
     "transactionCount": 3,
     "destinationAddresses": []
   },
+  "0x64d6fff882cd75e16ca25700e8e6dccd00243c60": {
+    "totalUsdcSent": "19.408506",
+    "transactionCount": 3,
+    "destinationAddresses": [
+      "0xb5a1b253188bde903cad9918a593a78fc58473f7",
+      "0x4642b3ea839fd86c6670bb13e0103341532167b6"
+    ]
+  },
   "0xaa793a8baac43d2385975402b04586bfdf9958fb": {
     "totalUsdcSent": "19.34273",
     "transactionCount": 3,
     "destinationAddresses": []
   },
+  "0xcb7be1fcca3e453102790fa4d7e5bee43f47524f": {
+    "totalUsdcSent": "19.314852",
+    "transactionCount": 4,
+    "destinationAddresses": []
+  },
   "0xc166a8d14ed3d26904c901cc8cac90a6607f0079": {
     "totalUsdcSent": "19.167491",
     "transactionCount": 3,
+    "destinationAddresses": []
+  },
+  "0x7b60d43b32e45394d1e86c188cb29a2fc1a42e4f": {
+    "totalUsdcSent": "19.052057",
+    "transactionCount": 4,
     "destinationAddresses": []
   },
   "0x9eb8cb35ec36763a5b579666caf32c60a679eb55": {
@@ -1006,6 +1049,18 @@
   "0x1dedc8e5acaf40c7b105815ac88a1900540ae917": {
     "totalUsdcSent": "18.51257",
     "transactionCount": 2,
+    "destinationAddresses": []
+  },
+  "0xda739063a09d9b2fea48c2f7feac2a81861c83d2": {
+    "totalUsdcSent": "18.344507",
+    "transactionCount": 3,
+    "destinationAddresses": [
+      "0x4b4c4e96ee7e18bc9a6a1a43470db321ec2f54bf"
+    ]
+  },
+  "0x376c5bd0a6264c1d50e98180c3859584f36b955b": {
+    "totalUsdcSent": "18.344507",
+    "transactionCount": 3,
     "destinationAddresses": []
   },
   "0x12fb92ebad2575c4cdedbbb5e8e090e4c0d33da2": {
@@ -1060,54 +1115,14 @@
     "transactionCount": 3,
     "destinationAddresses": []
   },
-  "0x5c9f33ecbfa3a620d83bfe82fe728126a5c056f6": {
-    "totalUsdcSent": "15.282203",
-    "transactionCount": 2,
-    "destinationAddresses": []
-  },
-  "0x7594f1f10802b2e61c40c2a56f864bcfd8ade34e": {
-    "totalUsdcSent": "15.282203",
-    "transactionCount": 2,
-    "destinationAddresses": [
-      "0x06d74e9ec399058f382682c578cbb0f98e5806fc"
-    ]
-  },
-  "0x5c76d3ae031add10c6c980e655c8df122723c56b": {
-    "totalUsdcSent": "15.282203",
-    "transactionCount": 2,
-    "destinationAddresses": []
-  },
   "0xe2224cf42d83c1759316c1312849ce0a32d49104": {
     "totalUsdcSent": "15.282203",
-    "transactionCount": 2,
-    "destinationAddresses": []
-  },
-  "0xb2d5bccecd8deced73468aef1aa5fef48165957e": {
-    "totalUsdcSent": "15.223909",
     "transactionCount": 2,
     "destinationAddresses": []
   },
   "0x86d0aebdfdbae98af432481c67df9c674fb83628": {
     "totalUsdcSent": "15.203771",
     "transactionCount": 2,
-    "destinationAddresses": []
-  },
-  "0x64d6fff882cd75e16ca25700e8e6dccd00243c60": {
-    "totalUsdcSent": "14.858941",
-    "transactionCount": 2,
-    "destinationAddresses": [
-      "0xb5a1b253188bde903cad9918a593a78fc58473f7",
-      "0x4642b3ea839fd86c6670bb13e0103341532167b6"
-    ]
-  },
-  "0xcb7be1fcca3e453102790fa4d7e5bee43f47524f": {
-    "totalUsdcSent": "14.765287",
-    "transactionCount": 3,
-    "destinationAddresses": []
-  },
-  "0x7b60d43b32e45394d1e86c188cb29a2fc1a42e4f": {
-    "totalUsdcSent": "14.502492",
-    "transactionCount": 3,
     "destinationAddresses": []
   },
   "0x0913d3c59b33c3be0ea33e78c8f33aecc7bf43a2": {
@@ -1125,19 +1140,7 @@
     "transactionCount": 2,
     "destinationAddresses": []
   },
-  "0xda739063a09d9b2fea48c2f7feac2a81861c83d2": {
-    "totalUsdcSent": "13.794942",
-    "transactionCount": 2,
-    "destinationAddresses": [
-      "0x4b4c4e96ee7e18bc9a6a1a43470db321ec2f54bf"
-    ]
-  },
   "0xfc32a43e9158ebfaa3d946cb6aae0c31e19b2940": {
-    "totalUsdcSent": "13.794942",
-    "transactionCount": 2,
-    "destinationAddresses": []
-  },
-  "0x376c5bd0a6264c1d50e98180c3859584f36b955b": {
     "totalUsdcSent": "13.794942",
     "transactionCount": 2,
     "destinationAddresses": []
@@ -1149,6 +1152,11 @@
   },
   "0xd7df872ccdcef3f73684879329e80cbf8a645ef2": {
     "totalUsdcSent": "13.429412",
+    "transactionCount": 2,
+    "destinationAddresses": []
+  },
+  "0x63fc68ff2c92c983016a2fc7383cb72acbe4a404": {
+    "totalUsdcSent": "13.085102",
     "transactionCount": 2,
     "destinationAddresses": []
   },
@@ -1197,6 +1205,16 @@
   },
   "0x11a946aadaedf825c214219656c5da95481a0c0f": {
     "totalUsdcSent": "11.947777",
+    "transactionCount": 2,
+    "destinationAddresses": []
+  },
+  "0x56d59ab4d75d9be7d82e32a790197c19f85e4272": {
+    "totalUsdcSent": "11.296231",
+    "transactionCount": 2,
+    "destinationAddresses": []
+  },
+  "0x23122c58bb8d6591f404b5ed6dfb6dc6d4c573ed": {
+    "totalUsdcSent": "11.296231",
     "transactionCount": 2,
     "destinationAddresses": []
   },
@@ -1281,11 +1299,6 @@
     "transactionCount": 2,
     "destinationAddresses": []
   },
-  "0x63fc68ff2c92c983016a2fc7383cb72acbe4a404": {
-    "totalUsdcSent": "8.535537",
-    "transactionCount": 1,
-    "destinationAddresses": []
-  },
   "0x743685cf58d9565b94f5e28fab58d343e746a586": {
     "totalUsdcSent": "8.535537",
     "transactionCount": 1,
@@ -1305,16 +1318,6 @@
   },
   "0x8007bbbda7027ad027df31227864b969758fb3f5": {
     "totalUsdcSent": "7.44",
-    "transactionCount": 1,
-    "destinationAddresses": []
-  },
-  "0x56d59ab4d75d9be7d82e32a790197c19f85e4272": {
-    "totalUsdcSent": "6.746666",
-    "transactionCount": 1,
-    "destinationAddresses": []
-  },
-  "0x23122c58bb8d6591f404b5ed6dfb6dc6d4c573ed": {
-    "totalUsdcSent": "6.746666",
     "transactionCount": 1,
     "destinationAddresses": []
   },
@@ -1450,6 +1453,31 @@
     "transactionCount": 1,
     "destinationAddresses": []
   },
+  "0x9a295f5b553fc108df3c45c51bd993917871585e": {
+    "totalUsdcSent": "4.549565",
+    "transactionCount": 1,
+    "destinationAddresses": []
+  },
+  "0x5052954886a8b4cd05042565b9c5c0ee8087548a": {
+    "totalUsdcSent": "4.549565",
+    "transactionCount": 1,
+    "destinationAddresses": []
+  },
+  "0x7b8e6bcaeaca8ddb8dabd1493a674c561cf7e0eb": {
+    "totalUsdcSent": "4.549565",
+    "transactionCount": 1,
+    "destinationAddresses": []
+  },
+  "0x33786f6dd94b7d041fb4aab476417985d1f962d2": {
+    "totalUsdcSent": "4.549565",
+    "transactionCount": 1,
+    "destinationAddresses": []
+  },
+  "0xaed814c69bf7be37e8d8517c9b381422f49276a8": {
+    "totalUsdcSent": "4.549565",
+    "transactionCount": 1,
+    "destinationAddresses": []
+  },
   "0x153ae1392ebf624ddb2a774062f15bbf5dfde740": {
     "totalUsdcSent": "4.133333",
     "transactionCount": 1,
@@ -1481,10 +1509,10 @@
     "totalUsdcSent": "0.143589",
     "transactionCount": 1,
     "destinationAddresses": [
-      "0xd7f1dd5d49206349cae8b585fcb0ce3d96f1696f",
       "0x1b74cfe6b3f6824fc2c86d28d8972c885f1d579d",
-      "0x1b7473350292886192dcf0dc58415300a10d579d",
       "0x1b74791db735814faadd5086e72a15788c8e079d",
+      "0x1b7473350292886192dcf0dc58415300a10d579d",
+      "0xd7f1dd5d49206349cae8b585fcb0ce3d96f1696f",
       "0xf5042e6ffac5a625d4e7848e0b01373d8eb9e222",
       "0xedc625b74537ee3a10874f53d170e9c17a906b9c",
       "0x919d33b074d204037c4fbb80d07f94c265820221",
